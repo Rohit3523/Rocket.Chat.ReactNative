@@ -15,7 +15,7 @@ const Wrapper = ({ accessibilityLabel, children, displayMode, ...props }: IWrapp
 			accessibilityLabel={accessibilityLabel}
 			accessible
 			accessibilityRole='button'>
-			<IconOrAvatar displayMode={displayMode} {...props} />
+			<IconOrAvatar displayMode={displayMode} fallbackColor={colors.surfaceNeutral} {...props} />
 			<View
 				style={[
 					styles.centerContainer,

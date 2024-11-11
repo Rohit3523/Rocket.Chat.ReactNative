@@ -154,4 +154,5 @@ export interface IIconOrAvatar {
 	teamMain: boolean;
 	showLastMessage: boolean;
 	sourceType: IOmnichannelSource;
+	fallbackColor?: string;
 }

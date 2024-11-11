@@ -19,11 +19,12 @@ const IconOrAvatar = ({
 	teamMain,
 	showLastMessage,
 	displayMode,
-	sourceType
+	sourceType,
+	fallbackColor
 }: IIconOrAvatar): React.ReactElement | null => {
 	if (showAvatar) {
 		return (
-			<Avatar text={avatar} size={displayMode === DisplayMode.Condensed ? 36 : 48} type={type} style={styles.avatar} rid={rid} />
+			<Avatar text={avatar} size={displayMode === DisplayMode.Condensed ? 36 : 48} type={type} style={styles.avatar} rid={rid} fallbackColor={fallbackColor}/>
 		);
 	}
 
