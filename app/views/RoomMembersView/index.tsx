@@ -404,7 +404,7 @@ const RoomMembersView = (): React.ReactElement => {
 					</>
 				}
 				ListFooterComponent={() => (state.isLoading ? <ActivityIndicator /> : null)}
-				onEndReachedThreshold={0.1}
+				onEndReachedThreshold={10}
 				onEndReached={() => fetchMembers(state.allUsers)}
 				ListEmptyComponent={() =>
 					state.end ? (
