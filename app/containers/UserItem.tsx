@@ -67,7 +67,7 @@ const UserItem = ({ name, username, onPress, testID, onLongPress, style, icon, i
 			accessibilityLabel={label}
 			accessibilityRole='button'>
 			<View style={[styles.container, styles.button, style]}>
-				<Avatar text={username} size={30} style={styles.avatar} />
+				<Avatar text={username} size={30} style={styles.avatar} fallbackColor={colors.surfaceNeutral}/>
 				<View style={styles.textContainer}>
 					<Text style={[styles.name, { color: colors.fontDefault }]} numberOfLines={1}>
 						{name}

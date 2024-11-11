@@ -19,7 +19,8 @@ const AvatarContainer = ({
 	onPress,
 	getCustomEmoji,
 	isStatic,
-	rid
+	rid,
+	fallbackColor
 }: IAvatar): React.ReactElement => {
 	const server = useSelector((state: IApplicationState) => state.server.server);
 	const serverVersion = useSelector((state: IApplicationState) => state.server.version);
@@ -66,6 +67,7 @@ const AvatarContainer = ({
 			avatarETag={avatarETag}
 			serverVersion={serverVersion}
 			cdnPrefix={cdnPrefix}
+			fallbackColor={fallbackColor}
 		/>
 	);
 };

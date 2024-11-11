@@ -25,4 +25,5 @@ export interface IAvatar {
 	avatarExternalProviderUrl?: string;
 	roomAvatarExternalProviderUrl?: string;
 	cdnPrefix?: string;
+	fallbackColor?: string;
 }

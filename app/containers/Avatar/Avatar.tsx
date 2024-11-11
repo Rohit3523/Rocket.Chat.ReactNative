@@ -31,8 +31,10 @@ const Avatar = React.memo(
 		type = SubscriptionType.DIRECT,
 		avatarExternalProviderUrl,
 		roomAvatarExternalProviderUrl,
-		cdnPrefix
+		cdnPrefix,
+		fallbackColor
 	}: IAvatar) => {
+		const [failToLoad, setFailToLoad] = React.useState(false);
 		if ((!text && !avatar && !emoji && !rid) || !server) {
 			return null;
 		}
@@ -42,6 +44,14 @@ const Avatar = React.memo(
 			height: size,
 			borderRadius
 		};
+
+		if(failToLoad) {
+			return (
+				<View style={[avatarStyle, style]} testID='avatar'>
+					<View style={{ backgroundColor: fallbackColor, borderRadius: 4, width: size, height: size }} />
+				</View>
+			)
+		}
 
 		let image;
 		if (emoji) {
@@ -74,6 +84,9 @@ const Avatar = React.memo(
 						uri,
 						headers: RocketChatSettings.customHeaders,
 						priority: FastImage.priority.high
+					}}
+					onError={() => {
+						setFailToLoad(true);
 					}}
 				/>
 			);
