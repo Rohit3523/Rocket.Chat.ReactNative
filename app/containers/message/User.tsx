@@ -40,6 +40,19 @@ const styles = StyleSheet.create({
 	alias: {
 		fontSize: 14,
 		...sharedStyles.textRegular
+	},
+	badgeContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingHorizontal: 4,
+		marginLeft: 5,
+		borderRadius: 2,
+		height: 18
+	},
+	badgeLabel: {
+		fontSize: 12,
+		fontWeight: 'bold',
+		...sharedStyles.textRegular
 	}
 });
 
@@ -62,6 +75,14 @@ interface IMessageUser {
 	unread?: boolean;
 	pinned?: boolean;
 	isTranslated: boolean;
+}
+
+function FormatUserRole(role: string) {
+	if(role === "core-team"){
+		return "Rocket.Chat Team";
+	}
+
+	return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
 const User = React.memo(
@@ -117,6 +138,13 @@ const User = React.memo(
 						<Text style={[styles.username, { color: colors.fontTitlesLabels }]} numberOfLines={1}>
 							{textContent}
 						</Text>
+						{
+							(!!props.badge) ? (
+								<View style={[styles.badgeContainer, { backgroundColor: colors.surfaceSelected }]}>
+									<Text style={[styles.badgeLabel, { color: colors.fontSecondaryInfo }]}>{FormatUserRole(props.badge)}</Text>
+								</View>
+							) : null
+						}
 						<Text style={[messageStyles.time, { color: colors.fontSecondaryInfo }]}>{time}</Text>
 					</TouchableOpacity>
 					<RightIcons

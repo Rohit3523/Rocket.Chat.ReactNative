@@ -11,6 +11,7 @@ import { IAttachment, TAnyMessageModel, TGetCustomEmoji } from '../../definition
 import { IRoomInfoParam } from '../../views/SearchMessagesView';
 import { E2E_MESSAGE_TYPE, E2E_STATUS, messagesStatus } from '../../lib/constants';
 import MessageSeparator from '../MessageSeparator';
+import { TUsersRoles } from 'reducers/usersRoles';
 
 interface IMessageContainerProps {
 	item: TAnyMessageModel;
@@ -63,6 +64,8 @@ interface IMessageContainerProps {
 	isPreview?: boolean;
 	dateSeparator?: Date | string | null;
 	showUnreadSeparator?: boolean;
+	userRoles?: TUsersRoles;
+	channelRoles?: TUsersRoles;
 }
 
 interface IMessageContainerState {
@@ -140,6 +143,12 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 		}
 		if (nextProps.autoTranslateRoom !== autoTranslateRoom || nextProps.autoTranslateLanguage !== autoTranslateLanguage) {
 			return true;
+		}
+		if(nextProps.userRoles?.length !== this.props.userRoles?.length) {
+			return true;
+		}
+		if (nextProps.channelRoles.length !== this.props.channelRoles.length) {
+			return true;			
 		}
 		return false;
 	}
@@ -380,8 +389,11 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 			isBeingEdited,
 			isPreview,
 			showUnreadSeparator,
-			dateSeparator
+			dateSeparator,
+			userRoles,
+			channelRoles
 		} = this.props;
+
 		const {
 			id,
 			msg,
@@ -427,6 +439,8 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 
 		const canTranslateMessage = autoTranslateRoom && autoTranslateLanguage && autoTranslateMessage !== false && otherUserMessage;
 
+		const badge = userRoles?.find(x=> x.username === u.username)?.roles[0] || channelRoles?.find(x=> x.username === u.username)?.roles[0]
+		
 		return (
 			<MessageContext.Provider
 				value={{
@@ -508,6 +522,7 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 					isBeingEdited={isBeingEdited}
 					isPreview={isPreview}
 					pinned={pinned}
+					badge={badge}
 				/>
 			</MessageContext.Provider>
 		);

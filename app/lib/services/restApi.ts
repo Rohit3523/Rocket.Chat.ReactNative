@@ -1,3 +1,4 @@
+import { TUsersRoles } from 'reducers/usersRoles';
 import {
 	IAvatarSuggestion,
 	IMessage,
@@ -645,7 +646,7 @@ export const getRoomRoles = (
 	type: SubscriptionType.CHANNEL | SubscriptionType.GROUP | SubscriptionType.OMNICHANNEL
 ) =>
 	// RC 0.65.0
-	sdk.get(`${roomTypeToApiType(type)}.roles`, { roomId });
+	sdk.methodCallWrapper(`getRoomRoles`, roomId);
 
 export const getAvatarSuggestion = (): Promise<{ [service: string]: IAvatarSuggestion }> =>
 	// RC 0.51.0
@@ -1071,7 +1072,7 @@ export const postMessage = (roomId: string, text: string) => sdk.post('chat.post
 export const notifyUser = (type: string, params: Record<string, any>): Promise<boolean> =>
 	sdk.methodCall('stream-notify-user', type, params);
 
-export const getUsersRoles = (): Promise<boolean> => sdk.methodCall('getUserRoles');
+export const getUsersRoles = (): Promise<TUsersRoles> => sdk.methodCallWrapper('getUserRoles');
 
 export const getSupportedVersionsCloud = (uniqueId?: string, domain?: string) =>
 	fetch(`https://releases.rocket.chat/v2/server/supportedVersions?uniqueId=${uniqueId}&domain=${domain}&source=mobile`);

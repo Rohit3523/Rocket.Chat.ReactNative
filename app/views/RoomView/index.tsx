@@ -48,6 +48,8 @@ import JoinCode, { IJoinCode } from './JoinCode';
 import UploadProgress from './UploadProgress';
 import ReactionPicker from './ReactionPicker';
 import List from './List';
+import { store } from '../../lib/store/auxStore';
+
 import {
 	IApplicationState,
 	IAttachment,
@@ -163,6 +165,8 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 			room,
 			roomUpdate: {},
 			member: {},
+			userRoles: [],
+			channelRoles: [],
 			lastOpen: null,
 			reactionsModalVisible: false,
 			selectedMessages,
@@ -606,9 +610,13 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 
 			const canAutoTranslate = canAutoTranslateMethod();
 			const member = await this.getRoomMember();
+			const channelRoles = await this.getChannelRoles();
 
-			this.setState({ canAutoTranslate, member, loading: false });
+			const userRoles = store.getState().usersRoles;
+
+			this.setState({ canAutoTranslate, member, loading: true, userRoles, channelRoles: channelRoles });
 		} catch (e) {
+			console.log(e)
 			this.setState({ loading: false });
 			this.retryInit += 1;
 			if (this.retryInit <= 1) {
@@ -620,6 +628,7 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 	};
 
 	getRoomMember = async () => {
+		console.log('member')
 		const { room } = this.state;
 		const { t } = room;
 
@@ -638,6 +647,38 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 		}
 
 		return {};
+	};
+
+	getChannelRoles = async () => {
+		try {
+			const { room } = this.state;
+
+			if(room.t == SubscriptionType.CHANNEL){
+				const roles = await Services.getRoomRoles(room.rid, SubscriptionType.CHANNEL);
+				
+				return roles;
+			}else{
+				return [];
+			}
+		} catch (e) {
+			console.log(e);
+		}
+	};
+
+	getUserRoles = async () => {
+		try {
+			const { room } = this.state;
+
+			if(room.t == SubscriptionType.CHANNEL){
+				const roles = await Services.getUsersRoles();
+				
+				return roles;
+			}else{
+				return [];
+			}
+		} catch (e) {
+			console.log(e);
+		}
 	};
 
 	findAndObserveRoom = async (rid: string) => {
@@ -1332,6 +1373,7 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 			if (inAppFeedback?.[item.id]) {
 				this.hapticFeedback(item.id);
 			}
+			
 			content = (
 				<Message
 					item={item}
@@ -1376,6 +1418,8 @@ class RoomView extends React.Component<IRoomViewProps, IRoomViewState> {
 					isBeingEdited={isBeingEdited}
 					dateSeparator={dateSeparator}
 					showUnreadSeparator={showUnreadSeparator}
+					userRoles={this.state.userRoles}
+					channelRoles={this.state.channelRoles}
 				/>
 			);
 		}
