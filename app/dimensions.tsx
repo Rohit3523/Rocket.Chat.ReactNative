@@ -37,20 +37,3 @@ export function withDimensions<T extends object>(Component: React.ComponentType<
 	hoistNonReactStatics(DimensionsComponent, Component);
 	return DimensionsComponent;
 }
-
-/**
- * @deprecated use RN's useWindowDimensions hook instead
- */
-export const useDimensions = () => React.useContext(DimensionsContext);
-
-/**
- * @deprecated use RN's useWindowDimensions hook instead
- */
-export const useOrientation = () => {
-	const { width, height } = React.useContext(DimensionsContext);
-	const isPortrait = height > width;
-	return {
-		isPortrait,
-		isLandscape: !isPortrait
-	};
-};

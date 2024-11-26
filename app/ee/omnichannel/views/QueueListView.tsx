@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { CompositeNavigationProp, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationOptions, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { FlatList, ListRenderItem } from 'react-native';
+import { FlatList, ListRenderItem, useWindowDimensions } from 'react-native';
 import { shallowEqual, useSelector } from 'react-redux';
 
 import I18n from '../../../i18n';
 import RoomItem, { ROW_HEIGHT } from '../../../containers/RoomItem';
 import { getUserSelector } from '../../../selectors/login';
 import { useTheme } from '../../../theme';
-import { useDimensions } from '../../../dimensions';
 import SafeAreaView from '../../../containers/SafeAreaView';
 import StatusBar from '../../../containers/StatusBar';
 import { goRoom } from '../../../lib/methods/helpers/goRoom';
@@ -38,7 +37,7 @@ const QueueListView = React.memo(() => {
 	const navigation = useNavigation<TNavigation>();
 	const getScrollRef = useRef<FlatList<IOmnichannelRoom>>(null);
 	const { colors } = useTheme();
-	const { width } = useDimensions();
+	const { width } = useWindowDimensions();
 
 	const { username } = useSelector(
 		(state: IApplicationState) => ({

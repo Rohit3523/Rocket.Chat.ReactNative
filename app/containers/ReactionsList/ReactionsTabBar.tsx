@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Pressable, View, ScrollView } from 'react-native';
+import { Text, Pressable, View, ScrollView, useWindowDimensions } from 'react-native';
 
 import Emoji from '../message/Emoji';
 import { useTheme } from '../../theme';
@@ -7,7 +7,6 @@ import { IReaction } from '../../definitions';
 import { TGetCustomEmoji } from '../../definitions/IEmoji';
 import I18n from '../../i18n';
 import styles, { MIN_TAB_WIDTH } from './styles';
-import { useDimensions } from '../../dimensions';
 
 interface ITabBarItem {
 	getCustomEmoji: TGetCustomEmoji;
@@ -54,7 +53,7 @@ const TabBarItem = ({ tab, index, goToPage, getCustomEmoji }: ITabBarItem) => {
 };
 
 const ReactionsTabBar = ({ tabs, activeTab, goToPage, getCustomEmoji }: IReactionsTabBar): React.ReactElement => {
-	const { width } = useDimensions();
+	const { width } = useWindowDimensions();
 	const tabWidth = tabs && Math.max(width / tabs.length, MIN_TAB_WIDTH);
 	const { colors } = useTheme();
 	return (
