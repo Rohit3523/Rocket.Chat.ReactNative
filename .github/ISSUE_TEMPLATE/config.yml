@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "Support Channel"
+    url: "https://open.rocket.chat/channel/react-native"
+    about: "Connect with maintainers, contributors, or discuss bugs related to the React Native app. Join our community on Rocket.Chat!"
