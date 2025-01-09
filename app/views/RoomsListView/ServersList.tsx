@@ -136,7 +136,7 @@ const ServersList = () => {
 			<View style={[styles.serversListContainerHeader, styles.serverHeader, { borderColor: colors.strokeLight }]}>
 				<Text style={[styles.serverHeaderText, { color: colors.fontSecondaryInfo }]}>{I18n.t('Server')}</Text>
 				<TouchableOpacity onPress={addServer} testID='rooms-list-header-server-add'>
-					<Text style={[styles.serverHeaderAdd, { color: colors.fontInfo }]}>{I18n.t('Add_Server')}</Text>
+					<Text style={[styles.serverHeaderAdd, { color: colors.fontInfo }]}>1{I18n.t('Add_Server')}</Text>
 				</TouchableOpacity>
 			</View>
 			<FlatList

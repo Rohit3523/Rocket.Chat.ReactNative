@@ -241,7 +241,9 @@ const DrawerNavigator = () => {
 				drawerType: 'slide',
 				overlayColor: `rgba(0,0,0,${colors.backdropOpacity})`,
 				freezeOnBlur: true
-			}}>
+			}}
+			backBehavior={'history'}
+		>
 			<Drawer.Screen name='ChatsStackNavigator' component={ChatsStackNavigator} />
 			<Drawer.Screen name='ProfileStackNavigator' component={ProfileStackNavigator} />
 			<Drawer.Screen name='SettingsStackNavigator' component={SettingsStackNavigator} />

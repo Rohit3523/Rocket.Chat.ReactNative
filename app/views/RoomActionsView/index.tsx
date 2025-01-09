@@ -3,7 +3,7 @@ import { Q } from '@nozbe/watermelondb';
 import { NativeStackNavigationOptions, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import isEmpty from 'lodash/isEmpty';
 import React from 'react';
-import { Share, Text, View } from 'react-native';
+import { NativeModules, Share, Text, View } from 'react-native';
 import { connect } from 'react-redux';
 import { Observable, Subscription } from 'rxjs';
 import { CompositeNavigationProp } from '@react-navigation/native';
@@ -1267,6 +1267,24 @@ class RoomActionsView extends React.Component<IRoomActionsViewProps, IRoomAction
 								<List.Separator />
 							</>
 						) : null}
+
+						<List.Item
+							title='Pin Chat'
+							onPress={() =>
+								NativeModules.QuickActions.createChatShortcut({
+									id: `rocketchat://RoomView/${rid}`,
+									longLabel: room.name,
+									shortLabel: room.name,
+									url: `rocketchat://RoomView/${rid}`,
+									icon: 'https://play-lh.googleusercontent.com/wGn6UxVJUVWBOEAR_864Y_TG42iCsr8Ls3xmLoT4oOimSo6lk2_2gfBATqNDNmArKzQ'
+								})
+							}
+							testID='room-actions-notifications'
+							left={() => <List.Icon name='notification' />}
+							showActionIndicator
+							disabled={hasE2EEWarning}
+						/>
+						<List.Separator />
 
 						{this.teamChannelActions(t, room)}
 						{this.teamToChannelActions(t, room)}
