@@ -411,7 +411,8 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 			replies,
 			md,
 			comment,
-			pinned
+			pinned,
+			location
 		} = item;
 
 		let message = msg;
@@ -508,6 +509,7 @@ class MessageContainer extends React.Component<IMessageContainerProps, IMessageC
 					isBeingEdited={isBeingEdited}
 					isPreview={isPreview}
 					pinned={pinned}
+					location={location}
 				/>
 			</MessageContext.Provider>
 		);

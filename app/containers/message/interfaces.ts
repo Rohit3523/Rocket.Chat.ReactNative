@@ -7,6 +7,11 @@ import { TGetCustomEmoji } from '../../definitions/IEmoji';
 import { IAttachment, IThread, IUrl, IUserMention, IUserMessage, MessageType, TAnyMessageModel } from '../../definitions';
 import { IRoomInfoParam } from '../../views/SearchMessagesView';
 
+export interface IMessageLocation {
+	coordinates: number[];
+	type: "Point";
+}
+
 export interface IMessageAttachments {
 	attachments?: IAttachment[];
 	timeFormat?: string;
@@ -65,6 +70,7 @@ export interface IMessageContent {
 	isHeader: boolean;
 	isTranslated: boolean;
 	pinned?: boolean;
+	location?: IMessageLocation;
 }
 
 export interface IMessageEmoji {
@@ -111,6 +117,7 @@ export interface IMessageInner
 	blocks: [];
 	urls?: IUrl[];
 	isPreview?: boolean;
+	location?: IMessageLocation;
 }
 
 export interface IMessage extends IMessageRepliedThread, IMessageInner, IMessageAvatar {

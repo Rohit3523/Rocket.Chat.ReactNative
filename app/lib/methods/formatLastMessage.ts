@@ -30,6 +30,14 @@ export const formatLastMessage = ({ lastMessage, type, showLastMessage, username
 		return I18n.t('User_sent_an_attachment', { user: userAttachment() });
 	}
 
+	if(!lastMessage.msg && lastMessage.location && lastMessage.location.coordinates) {
+		if(isLastMessageSentByMe) {
+			return `You sent your location`;
+		}
+
+		return `${lastMessage.u.username} sent their location`;
+	}
+
 	// Encrypted message pending decrypt
 	if (lastMessage.t === E2E_MESSAGE_TYPE && lastMessage.e2e !== E2E_STATUS.DONE) {
 		lastMessage.msg = I18n.t('Encrypted_message');

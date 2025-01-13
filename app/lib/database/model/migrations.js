@@ -322,6 +322,15 @@ export default schemaMigrations({
 					]
 				})
 			]
+		},
+		{
+			toVersion: 27,
+			steps: [
+				addColumns({
+					table: 'messages',
+					columns: [{ name: 'location', type: 'string', isOptional: true }]
+				})
+			]
 		}
 	]
 });

@@ -7,6 +7,7 @@ import { IReaction } from './IReaction';
 import { TThreadMessageModel } from './IThreadMessage';
 import { TThreadModel } from './IThread';
 import { IUrl, IUrlFromServer } from './IUrl';
+import { IMessageLocation } from 'containers/message/interfaces';
 
 export type TMessageAction = 'quote' | 'edit' | 'react' | null;
 
@@ -72,6 +73,7 @@ export interface ILastMessage {
 	pinned?: boolean;
 	status?: number;
 	token?: string;
+	location?: IMessageLocation;
 }
 
 interface IMessageFile {
@@ -113,6 +115,10 @@ export interface IMessageFromServer {
 	};
 	score?: number;
 	content?: IMessageE2EEContent;
+	location?: {
+		coordinates: number[];
+		type: "Point";
+	}
 }
 
 export interface ILoadMoreMessage {

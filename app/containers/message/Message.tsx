@@ -22,6 +22,7 @@ import { useTheme } from '../../theme';
 import RightIcons from './Components/RightIcons';
 import i18n from '../../i18n';
 import { getInfoMessage } from './utils';
+import Location from './Location';
 
 const MessageInner = React.memo((props: IMessageInner) => {
 	if (props.isPreview) {
@@ -78,6 +79,7 @@ const MessageInner = React.memo((props: IMessageInner) => {
 			<Thread {...props} />
 			<Reactions {...props} />
 			<Broadcast {...props} />
+			<Location {...props} />
 		</>
 	);
 });
