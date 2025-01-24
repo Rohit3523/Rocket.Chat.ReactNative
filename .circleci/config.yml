@@ -3,13 +3,15 @@ jobs:
   build:
     docker:
       - image: circleci/android:api-30
+        environment:
+          ANDROID_HOME: /opt/android/sdk
       - image: cimg/node:23.6.1
     steps:
       - checkout
       - run:
           name: Install Yarn
           command: |
-            sudo npm install -g yarn
+            npm install -g yarn
       - run:
           name: Install Dependencies
           command: yarn install
