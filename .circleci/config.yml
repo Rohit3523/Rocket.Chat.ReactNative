@@ -1,10 +1,13 @@
 version: 2.1
+orbs:
+  android: circleci/android@3.0.0
+  node: circleci/node@7.0.0
 jobs:
   build:
-    docker:
-      - image: cimg/android:2023.11.1-node
-        environment:
-          ANDROID_HOME: /opt/android/sdk
+    executor:
+      name: android/android_machine
+      resource_class: large
+      tag: default
     steps:
       - checkout
       - run:
@@ -13,13 +16,14 @@ jobs:
       - run:
           name: Install Maestro
           command: curl -Ls "https://get.maestro.mobile.dev" | bash
-      - run:
-          name: Start Emulator
-          command: |
-            sdkmanager "system-images;android-30;google_apis;x86_64"
-            echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64"
-            $ANDROID_HOME/emulator/emulator -avd test -no-skin -no-audio -no-window &
-            adb wait-for-device
+      - android/create_avd:
+          avd_name: myavd
+          install: true
+          system_image: system-images;android-31;default;x86_64
+      - android/start_emulator:
+          avd_name: myavd
+          no_window: true
+          restore_gradle_cache_prefix: v1a
       - run:
           name: Run Maestro Tests
           command: maestro test maestro/login.yaml
