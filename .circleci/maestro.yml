@@ -1,0 +1,28 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/android:api-30
+    steps:
+      - checkout
+      - run:
+          name: Set up Node.js
+          command: |
+            curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Install Maestro
+          command: curl -Ls "https://get.maestro.mobile.dev" | bash
+      - run:
+          name: Start Emulator
+          command: |
+            sdkmanager "system-images;android-30;google_apis;x86_64"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64"
+            $ANDROID_HOME/emulator/emulator -avd test -no-skin -no-audio -no-window &
+            adb wait-for-device
+      - run:
+          name: Run Maestro Tests
+          command: maestro test maestro/login.yaml

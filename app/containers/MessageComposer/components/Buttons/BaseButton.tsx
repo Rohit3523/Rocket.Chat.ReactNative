@@ -1,6 +1,6 @@
 import { BorderlessButton } from 'react-native-gesture-handler';
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Pressable } from 'react-native';
 
 import I18n from '../../../../i18n';
 import { CustomIcon, TIconsName } from '../../../CustomIcon';
@@ -21,11 +21,11 @@ export const hitSlop = {
 };
 
 export const BaseButton = ({ accessibilityLabel, icon, color, testID, onPress }: IBaseButton) => (
-	<BorderlessButton style={styles.button} onPress={() => onPress()} testID={testID} hitSlop={hitSlop}>
+	<Pressable style={styles.button} onPress={() => onPress()} testID={testID} hitSlop={hitSlop}>
 		<View accessible accessibilityLabel={I18n.t(accessibilityLabel)} accessibilityRole='button'>
 			<CustomIcon name={icon} size={24} color={color} />
 		</View>
-	</BorderlessButton>
+	</Pressable>
 );
 
 const styles = StyleSheet.create({

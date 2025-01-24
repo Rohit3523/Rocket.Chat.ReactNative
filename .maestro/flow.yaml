@@ -1,0 +1,9 @@
+appId: chat.rocket.reactnative
+---
+- launchApp
+- tapOn: "rohitbansal"
+- tapOn: "Message #rohitbansal"
+- inputText: "Hello"
+- tapOn:
+    id: "message-composer-send"
+    retryTapIfNoChange: false
