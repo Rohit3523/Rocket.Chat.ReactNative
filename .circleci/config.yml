@@ -3,16 +3,16 @@ jobs:
   build:
     docker:
       - image: circleci/android:api-30
+      - image: cimg/node:23.6.1
     steps:
       - checkout
       - run:
-          name: Set up Node.js
+          name: Install Yarn
           command: |
-            curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
+            sudo npm install -g yarn
       - run:
           name: Install Dependencies
-          command: npm install
+          command: yarn install
       - run:
           name: Install Maestro
           command: curl -Ls "https://get.maestro.mobile.dev" | bash
