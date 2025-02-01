@@ -1,0 +1,11 @@
+appId: chat.rocket.reactnative
+---
+- clearState
+- launchApp
+- runFlow: "helpers/userlogin.yaml"
+- tapOn: "sandbox"
+- tapOn: "Message #sandbox"
+- inputText: "Hello"
+- tapOn:
+    id: "message-composer-send"
+    retryTapIfNoChange: false

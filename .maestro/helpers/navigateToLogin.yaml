@@ -1,0 +1,11 @@
+appId: chat.rocket.reactnative
+
+tags:
+  - util
+---
+- tapOn:
+    id: "new-server-view-input"
+- inputText: ${output.config.workspaceUrl}
+- pressKey: Enter
+- assertVisible: "Mobile!"
+- tapOn: "Login"

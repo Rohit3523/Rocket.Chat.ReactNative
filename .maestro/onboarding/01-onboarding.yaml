@@ -1,0 +1,23 @@
+appId: chat.rocket.reactnative
+---
+- clearState
+- launchApp
+- assertVisible:
+    id: "new-server-view"
+- tapOn:
+    id: "new-server-view-input"
+- inputText: "invalidtest"
+- pressKey: Enter
+- assertVisible:
+    text: "Invalid workspace URL"
+- tapOn:
+    text: "OK"
+- tapOn:
+    id: "new-server-view-input"
+- eraseText
+- inputText: "https://mobile.rocket.chat"
+- pressKey: Enter
+- assertVisible:
+    id: "workspace-view"
+- assertVisible:
+    text: "Mobile!"

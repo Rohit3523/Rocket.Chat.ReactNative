@@ -1,0 +1,14 @@
+appId: chat.rocket.reactnative
+tags:
+  - android
+  - passing
+  - advanced
+---
+- clearState
+- launchApp
+- tapOn:
+    id: "new-server-view-input"
+- inputText: "Hello"
+- pressKey: Enter
+- assertVisible:
+    text: "Invalid workspace URL"

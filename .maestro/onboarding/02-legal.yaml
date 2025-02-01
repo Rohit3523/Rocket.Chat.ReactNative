@@ -1,0 +1,31 @@
+appId: chat.rocket.reactnative
+---
+- clearState
+- launchApp
+- runFlow: "../helpers/navigateToLogin.yaml"
+- assertVisible:
+    id: "login-view-more"
+# click on legal button
+- tapOn:
+    id: "login-view-more"
+- assertVisible:
+    id: "legal-view"
+- assertVisible:
+    id: "legal-terms-button"
+- assertVisible:
+    id: "legal-privacy-button"
+
+- clearState
+- launchApp
+- runFlow: "../helpers/navigateToRegister.yaml"
+- assertVisible:
+    id: "register-view-more"
+# click on legal button
+- tapOn:
+    id: "register-view-more"
+- assertVisible:
+    id: "legal-view"
+- assertVisible:
+    id: "legal-terms-button"
+- assertVisible:
+    id: "legal-privacy-button"

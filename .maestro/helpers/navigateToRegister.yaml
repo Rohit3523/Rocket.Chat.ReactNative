@@ -1,0 +1,13 @@
+appId: chat.rocket.reactnative
+
+tags:
+  - util
+env:
+  url: https://mobile.rocket.chat
+---
+- tapOn:
+    id: "new-server-view-input"
+- inputText: ${url}
+- pressKey: Enter
+- assertVisible: "Mobile!"
+- tapOn: "Create an account"

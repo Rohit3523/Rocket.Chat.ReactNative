@@ -1,0 +1,21 @@
+appId: chat.rocket.reactnative
+---
+- clearState
+- launchApp
+- runFlow: "helpers/userlogin.yaml"
+- tapOn:
+    id: "rooms-list-view-sidebar"
+- assertVisible:
+    id: "sidebar-view"
+- tapOn:
+    id: "sidebar-settings"
+- scrollUntilVisible:
+    element:
+      id: "settings-view"
+    direction: DOWN
+- tapOn:
+    id: "settings-logout"
+- assertVisible: "Are you sure?"
+- tapOn: "Logout"
+- assertVisible:
+    id: "new-server-view"

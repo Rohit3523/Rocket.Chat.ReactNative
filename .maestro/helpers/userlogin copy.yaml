@@ -1,0 +1,26 @@
+appId: chat.rocket.reactnative
+
+tags:
+  - util
+env:
+  url: https://open.rocket.chat
+  username: rohitbansal2518@gmail.com
+  password: GyrNC6wa!8mWxQC
+---
+- clearState
+- launchApp
+- tapOn:
+    id: "new-server-view-input"
+- inputText: ${output?.config?.workspaceUrl || url}
+- pressKey: Enter
+- assertVisible: "Rocket.Chat"
+- tapOn: "Login"
+- tapOn:
+    id: "login-view-email"
+- inputText: ${output?.user?.username || username}
+- tapOn:
+    id: "login-view-password"
+- inputText: ${output?.user?.password || password}
+- tapOn:
+    id: "login-view-submit"
+- assertVisible: "sandbox"
