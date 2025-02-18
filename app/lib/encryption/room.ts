@@ -462,7 +462,7 @@ export default class EncryptionRoom {
 				title: file.name,
 				type: 'file',
 				description: file.description,
-				title_link: fileUrl,
+				cache_path: fileUrl,
 				title_link_download: true,
 				encryption: {
 					key: exportedKey,

@@ -12,6 +12,7 @@ export interface IAttachment {
 	type?: string;
 	size?: number;
 	description?: string;
+	cache_path?: string;
 	title_link?: string;
 	image_url?: string;
 	image_type?: string;

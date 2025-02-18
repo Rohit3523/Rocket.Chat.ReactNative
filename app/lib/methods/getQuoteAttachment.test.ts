@@ -4,7 +4,7 @@ const imageAttachment = [
 	{
 		ts: '1970-01-01T00:00:00.000Z',
 		title: 'IMG_0058.MP4',
-		title_link: '/file-upload/34q5BbCRW3wCauiDt/IMG_0058.MP4',
+		cache_path: '/file-upload/34q5BbCRW3wCauiDt/IMG_0058.MP4',
 		title_link_download: true,
 		video_url: '/file-upload/34q5BbCRW3wCauiDt/IMG_0058.MP4',
 		video_type: 'video/mp4',

@@ -210,7 +210,7 @@ const mapAttachments = ({
 }): TMessageModel['attachments'] =>
 	attachments?.map(att => ({
 		...att,
-		title_link: uri,
+		cache_path: uri,
 		e2e: encryption ? 'done' : undefined
 	}));
 

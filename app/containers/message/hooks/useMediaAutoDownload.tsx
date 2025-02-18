@@ -48,7 +48,7 @@ export const useMediaAutoDownload = ({
 	const { id, baseUrl, user } = useContext(MessageContext);
 	const [status, setStatus] = useState<TDownloadState>('to-download');
 	const [currentFile, setCurrentFile] = useFile(file, id);
-	const url = formatAttachmentUrl(file.title_link || getFileProperty(currentFile, fileType, 'url'), user.id, user.token, baseUrl);
+	const url = formatAttachmentUrl(file.cache_path || getFileProperty(currentFile, fileType, 'url'), user.id, user.token, baseUrl);
 	const isEncrypted = currentFile.e2e === 'pending';
 
 	useEffect(() => {
@@ -115,7 +115,7 @@ export const useMediaAutoDownload = ({
 
 	const updateCurrentFile = (uri: string) => {
 		setCurrentFile({
-			title_link: uri
+			cache_path: uri
 		});
 		setStatus('downloaded');
 	};
@@ -150,7 +150,7 @@ export const useMediaAutoDownload = ({
 			download();
 			return;
 		}
-		if (!showAttachment || !currentFile.title_link || isEncrypted) {
+		if (!showAttachment || !currentFile.cache_path || isEncrypted) {
 			return;
 		}
 		showAttachment(currentFile);
