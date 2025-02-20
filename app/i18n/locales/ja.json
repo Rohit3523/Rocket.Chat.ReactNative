@@ -165,6 +165,7 @@
   "Finish_recording": "録音停止",
   "Following_thread": "スレッド更新時に通知",
   "For_your_security_you_must_enter_your_current_password_to_continue": "セキュリティのために、続行するにはアカウントのパスワードを入力する必要があります。",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "セキュリティのために、続行するにはアカウントのユーザー名を入力する必要があります。",
   "Forgot_password": "パスワードを忘れた",
   "Forgot_password_If_this_email_is_registered": "送信したメールアドレスが登録されていれば、パスワードのリセット方法を送信しました。メールアドレスがすぐに来ない場合はやり直してください。",
   "Forward": "転送",
