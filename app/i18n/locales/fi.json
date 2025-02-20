@@ -253,6 +253,7 @@
   "Following": "Seurataan",
   "Following_thread": "Seurataan ketjua",
   "For_your_security_you_must_enter_your_current_password_to_continue": "Turvallisuutesi vuoksi sinun on syötettävä tilisi salasana jatkaaksesi.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "Turvallisuutesi vuoksi sinun on syötettävä tilisi käyttäjänimimerkki jatkaaksesi.",
   "Forgot_password": "Unohditko salasanasi?",
   "Forgot_password_If_this_email_is_registered": "Jos tämä sähköpostiosoite on rekisteröity, lähetämme salasanan nollausohjeet. Jos et saa sähköpostia pian, palaa ja yritä uudelleen.",
   "Forward": "Välitä",

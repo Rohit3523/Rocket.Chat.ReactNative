@@ -117,6 +117,7 @@
   "Finish_recording": "Finalizar grabación",
   "Following_thread": "Siguiendo hilo",
   "For_your_security_you_must_enter_your_current_password_to_continue": "Por su seguridad, debe ingresar la contraseña de su cuenta para continuar.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "Por su seguridad, debe ingresar el nombre de usuario de su cuenta para continuar.",
   "Forgot_password": "¿Ha olvidado su contraseña?",
   "Forgot_password_If_this_email_is_registered": "Si este email está registrado, te enviaremos las instrucciones para resetear tu contraseña. Si no recibes un email en breve, vuelve aquí e inténtalo de nuevo.",
   "Full_name": "Nombre completo",

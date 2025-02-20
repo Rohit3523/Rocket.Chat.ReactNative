@@ -182,6 +182,7 @@
   "Following": "正在追蹤",
   "Following_thread": "追蹤的討論串",
   "For_your_security_you_must_enter_your_current_password_to_continue": "為了您的安全，您必須輸入您的帳戶密碼以繼續。",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "為了您的安全，您必須輸入您的帳戶使用者名稱才能繼續。",
   "Forgot_password": "忘記密碼",
   "Forgot_password_If_this_email_is_registered": "如果此電子郵件已註冊，我們將發送有關如何重設密碼的說明。如果您未在短時間內收到電子郵件，請再試一次。",
   "Forward": "轉發",

@@ -314,6 +314,7 @@
   "Following": "Following",
   "Following_thread": "Following thread",
   "For_your_security_you_must_enter_your_current_password_to_continue": "For your security, you must enter your account password to continue.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "For your security, you must enter your account username to continue.",
   "Forgot_password": "Forgot your password?",
   "Forgot_password_If_this_email_is_registered": "If this email is registered, we'll send instructions on how to reset your password. If you do not receive an email shortly, please come back and try again.",
   "Forward": "Forward",

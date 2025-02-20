@@ -160,6 +160,7 @@
   "Finish_recording": "Terminar a gravação",
   "Following_thread": "Seguir discussão",
   "For_your_security_you_must_enter_your_current_password_to_continue": "Para sua segurança, deve introduzir a palavra-passe da sua conta para continuar.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "Para sua segurança, deve introduzir o nome de usuário da sua conta para continuar.",
   "Forgot_password": "Esquecer palavra-passe",
   "Forgot_password_If_this_email_is_registered": "Se este e-mail estiver registado, enviaremos instruções sobre como repor a sua palavra-passe. Se você não receber um e-mail em breve, volte e tente novamente.",
   "Forward": "Reencaminhar",

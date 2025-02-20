@@ -274,6 +274,7 @@
   "Following": "Követve",
   "Following_thread": "Követett szál",
   "For_your_security_you_must_enter_your_current_password_to_continue": "A biztonsága érdekében meg kell adnia a fiókja jelszavát a folytatáshoz.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "A biztonsága érdekében meg kell adnia a fiókja felhasználó návat a folytatáshoz.",
   "Forgot_password": "Elfelejtette a jelszavát?",
   "Forgot_password_If_this_email_is_registered": "Ha ez az e-mail-cím regisztrálva van, akkor utasításokat küldünk a jelszó visszaállításához. Ha nem kap rövidesen e-mailt, akkor térjen vissza, és próbálja meg újra.",
   "Forward": "Továbbítás",

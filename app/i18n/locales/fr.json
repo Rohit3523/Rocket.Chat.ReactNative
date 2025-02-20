@@ -218,6 +218,7 @@
   "Following": "Suivant",
   "Following_thread": "Suivre le fil",
   "For_your_security_you_must_enter_your_current_password_to_continue": "Pour votre sécurité, vous devez entrer le mot de passe de votre compte pour continuer.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "Pour votre sécurité, vous devez entrer le nom d'utilisateur de votre compte pour continuer.",
   "Forgot_password": "Mot de passe oublié ?",
   "Forgot_password_If_this_email_is_registered": "Si cet e-mail est enregistré, nous vous enverrons des instructions pour réinitialiser votre mot de passe. Si vous ne recevez pas d'e-mail sous peu, veuillez revenir et réessayer.",
   "Forward": "Transmettre",

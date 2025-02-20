@@ -229,6 +229,7 @@
   "Following": "Sledenje",
   "Following_thread": "Naslednja nit",
   "For_your_security_you_must_enter_your_current_password_to_continue": "Zaradi vaše varnosti morate vnesti geslo za svoj račun, da nadaljujete.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "Zaradi vaše varnosti morate vnesti ime uporabnika, da nadaljujete.",
   "Forgot_password": "Pozabljeno geslo",
   "Forgot_password_If_this_email_is_registered": "Če je ta elektronski naslov registriran, bomo poslali navodila, kako ponastaviti geslo. Če v kratkem ne prejmete e -pošte, se vrnite in poskusite znova.",
   "Forward": "Posreduj",

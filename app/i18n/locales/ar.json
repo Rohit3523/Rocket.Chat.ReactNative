@@ -165,6 +165,7 @@
   "Finish_recording": "إنهاء التسجيل",
   "Following_thread": "متابعة الموضوع",
   "For_your_security_you_must_enter_your_current_password_to_continue": "لأمانك، يجب عليك إدخال كلمة مرور حسابك للمتابعة.",
+  "For_your_security_you_must_enter_your_current_username_to_continue": "لأمانك، يجب عليك إدخال اسم المستخدم حسابك للمتابعة.",
   "Forgot_password": "هل نسيت كلمة المرور؟",
   "Forgot_password_If_this_email_is_registered": "إن كان البريد الإلكتروني مسجلاً، فسنرسل تعليمات إعادة تعيين كلمة المرور الخاصة بك. إذا لم تتلق بريداً إلكترونياً قريباً، فيرجى العودة والمحاولة مرة أخرى",
   "Forward": "إعادة توجيه",
