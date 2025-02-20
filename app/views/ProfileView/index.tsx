@@ -69,6 +69,7 @@ interface IProfileViewState {
 		twoFactorCode: string;
 		twoFactorMethod: string;
 	};
+	hasPassword: boolean;
 }
 
 class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> {
@@ -111,7 +112,8 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
 		newPassword: '',
 		currentPassword: '',
 		customFields: {},
-		twoFactorCode: null
+		twoFactorCode: null,
+		hasPassword: false
 	};
 
 	componentDidMount() {
@@ -138,6 +140,12 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
 			bio,
 			nickname
 		});
+
+		Services.getMe().then((res) => {
+			if(res.success){
+				this.setState({ hasPassword: res.services.password.exists });
+			}
+		}).catch(() => {});
 	};
 
 	formIsChanged = () => {
@@ -413,7 +421,7 @@ class ProfileView extends React.Component<IProfileViewProps, IProfileViewState> 
 	deleteOwnAccount = () => {
 		logEvent(events.DELETE_OWN_ACCOUNT);
 		this.props.showActionSheet({
-			children: <DeleteAccountActionSheetContent />
+			children: <DeleteAccountActionSheetContent hasPassword={this.state.hasPassword}/>
 		});
 	};
 
