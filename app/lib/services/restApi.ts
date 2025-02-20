@@ -1,3 +1,4 @@
+import { IMe } from 'definitions/IMe';
 import {
 	IAvatarSuggestion,
 	IMessage,
@@ -1083,3 +1084,5 @@ export const getSupportedVersionsCloud = (uniqueId?: string, domain?: string) =>
 	fetch(`https://releases.rocket.chat/v2/server/supportedVersions?uniqueId=${uniqueId}&domain=${domain}&source=mobile`);
 
 export const setUserPassword = (password: string) => sdk.methodCall('setUserPassword', password);
+
+export const getMe = () => sdk.get('me');
