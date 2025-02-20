@@ -14,7 +14,11 @@ import { useTheme } from '../../../../theme';
 import { getTranslations } from './getTranslations';
 import AlertText from './AlertText';
 
-export function DeleteAccountActionSheetContent(): React.ReactElement {
+interface IDeleteAccountActionSheetContentProps {
+	hasPassword: boolean;
+}
+
+export function DeleteAccountActionSheetContent({ hasPassword }: IDeleteAccountActionSheetContentProps): React.ReactElement {
 	const { hideActionSheet, showActionSheet } = useActionSheet();
 	const dispatch = useDispatch();
 	const { colors } = useTheme();
@@ -56,10 +60,10 @@ export function DeleteAccountActionSheetContent(): React.ReactElement {
 	return (
 		<ActionSheetContentWithInputAndSubmit
 			title={i18n.t('Are_you_sure_you_want_to_delete_your_account')}
-			description={i18n.t('For_your_security_you_must_enter_your_current_password_to_continue')}
+			description={hasPassword ? i18n.t('For_your_security_you_must_enter_your_current_password_to_continue') : i18n.t('For_your_security_you_must_enter_your_current_username_to_continue')}
 			onCancel={hideActionSheet}
 			onSubmit={password => handleDeleteAccount(password as string)}
-			placeholder={i18n.t('Password')}
+			placeholder={hasPassword ? i18n.t('Password') : i18n.t('Username')}
 			testID='profile-view-delete-account-sheet'
 			iconName='warning'
 			confirmTitle={i18n.t('Delete_Account')}
