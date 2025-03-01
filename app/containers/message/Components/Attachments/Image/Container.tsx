@@ -23,7 +23,6 @@ const ImageContainer = ({
 	const { user } = useContext(MessageContext);
 	const { status, onPress, url, isEncrypted } = useMediaAutoDownload({ file, author, showAttachment });
 
-	//console.log('file.color', file)
 	const image = (
 		<Button onPress={onPress}>
 			<WidthAwareView>
