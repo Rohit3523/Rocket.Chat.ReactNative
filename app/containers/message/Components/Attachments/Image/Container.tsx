@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 
 import Markdown from '../../../../markdown';
 import { useMediaAutoDownload } from '../../../hooks/useMediaAutoDownload';
@@ -23,6 +23,7 @@ const ImageContainer = ({
 	const { user } = useContext(MessageContext);
 	const { status, onPress, url, isEncrypted } = useMediaAutoDownload({ file, author, showAttachment });
 
+	//console.log('file.color', file)
 	const image = (
 		<Button onPress={onPress}>
 			<WidthAwareView>
