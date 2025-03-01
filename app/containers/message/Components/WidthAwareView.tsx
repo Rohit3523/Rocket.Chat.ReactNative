@@ -5,7 +5,9 @@ export const WidthAwareContext = createContext(0);
 
 const styles = StyleSheet.create({
 	container: {
-		flexDirection: 'row'
+		flexDirection: 'row',
+		flexShrink: 1,
+		maxWidth: 400
 	}
 });
 
@@ -17,6 +19,7 @@ export const WidthAwareView = ({ children }: { children: ReactElement }) => {
 			style={styles.container}
 			onLayout={ev => {
 				if (ev.nativeEvent.layout.width) {
+					console.log(ev.nativeEvent.layout.width);
 					setWidth(ev.nativeEvent.layout.width);
 				}
 			}}>

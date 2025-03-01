@@ -7,7 +7,7 @@ import User from './User';
 import styles from './styles';
 import RepliedThread from './RepliedThread';
 import MessageAvatar from './MessageAvatar';
-import Attachments from './Components/Attachments';
+import Attachments, { Embed } from './Components/Attachments';
 import Urls from './Urls';
 import Thread from './Thread';
 import Blocks from './Blocks';
@@ -17,11 +17,19 @@ import Discussion from './Discussion';
 import Content from './Content';
 import CallButton from './CallButton';
 import { themes } from '../../lib/constants';
-import { IMessage, IMessageInner, IMessageTouchable } from './interfaces';
+import { IMessage, IMessageAttachments, IMessageInner, IMessageTouchable } from './interfaces';
 import { useTheme } from '../../theme';
 import RightIcons from './Components/RightIcons';
 import i18n from '../../i18n';
 import { getInfoMessage } from './utils';
+import { IAttachment } from 'definitions';
+
+function IsEmbed(props: IAttachment[] | undefined){
+	if(!props || props.length === 0) return false;
+
+	const attachment = props[0];
+	if(attachment.color || attachment.fields?.length) return true;
+}
 
 const MessageInner = React.memo((props: IMessageInner) => {
 	if (props.isPreview) {
@@ -72,7 +80,13 @@ const MessageInner = React.memo((props: IMessageInner) => {
 			<User {...props} />
 			<>
 				<Content {...props} />
-				<Attachments {...props} />
+				{
+					IsEmbed(props.attachments) ? (
+						<Embed {...props} />
+					) : (
+						<Attachments {...props} />
+					)
+				}
 			</>
 			<Urls {...props} />
 			<Thread {...props} />
