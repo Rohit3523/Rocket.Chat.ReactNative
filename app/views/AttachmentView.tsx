@@ -55,6 +55,8 @@ const RenderContent = ({
 		};
 	}, [navigation]);
 
+	console.log(attachment);
+
 	if (attachment.image_url) {
 		const url = formatAttachmentUrl(attachment.cache_path || attachment.image_url, user.id, user.token, baseUrl);
 		const uri = encodeURI(url);
