@@ -214,13 +214,13 @@ const Reply = React.memo(
 		}
 
 		const onPress = async () => {
-			let url = attachment.title_link || attachment.author_link;
+			let url = attachment.cache_path || attachment.author_link;
 			if (!url) {
 				return;
 			}
-			if (attachment.type === 'file' && attachment.title_link) {
+			if (attachment.type === 'file' && attachment.cache_path) {
 				setLoading(true);
-				url = formatAttachmentUrl(attachment.title_link, user.id, user.token, baseUrl);
+				url = formatAttachmentUrl(attachment.cache_path, user.id, user.token, baseUrl);
 				await fileDownloadAndPreview(url, attachment, id);
 				setLoading(false);
 				return;

@@ -56,7 +56,7 @@ const RenderContent = ({
 	}, [navigation]);
 
 	if (attachment.image_url) {
-		const url = formatAttachmentUrl(attachment.title_link || attachment.image_url, user.id, user.token, baseUrl);
+		const url = formatAttachmentUrl(attachment.cache_path || attachment.image_url, user.id, user.token, baseUrl);
 		const uri = encodeURI(url);
 		return (
 			<ImageViewer
@@ -68,7 +68,7 @@ const RenderContent = ({
 		);
 	}
 	if (attachment.video_url) {
-		const url = formatAttachmentUrl(attachment.title_link || attachment.video_url, user.id, user.token, baseUrl);
+		const url = formatAttachmentUrl(attachment.cache_path || attachment.video_url, user.id, user.token, baseUrl);
 		const uri = encodeURI(url);
 		return (
 			<Video
@@ -138,9 +138,9 @@ const AttachmentView = (): React.ReactElement => {
 	}, [navigation]);
 
 	const handleSave = async () => {
-		const { title_link, image_url, image_type, video_url, video_type } = attachment;
-		// When the attachment is a video, the video_url refers to local file and the title_link to the link
-		const url = video_url || title_link || image_url;
+		const { cache_path, image_url, image_type, video_url, video_type } = attachment;
+		// When the attachment is a video, the video_url refers to local file and the cache_path to the link
+		const url = video_url || cache_path || image_url;
 
 		if (!url) {
 			return;

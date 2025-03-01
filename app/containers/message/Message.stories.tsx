@@ -942,7 +942,8 @@ export const ThumbnailFromServer = () => (
 				text: 'Image text',
 				thumb_url: 'https://images-na.ssl-images-amazon.com/images/I/71jKxPAMFbL._AC_SL1500_.jpg',
 				title: 'Title',
-				title_link: 'https://github.com/RocketChat/Rocket.Chat.ReactNative/pull/2975'
+				title_link: 'https://github.com/RocketChat/Rocket.Chat.ReactNative/pull/2975',
+				image_url: 'https://images-na.ssl-images-amazon.com/images/I/71jKxPAMFbL._AC_SL1500_.jpg'
 			}
 		]}
 	/>
