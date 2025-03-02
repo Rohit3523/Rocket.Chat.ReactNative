@@ -6,8 +6,7 @@ export const WidthAwareContext = createContext(0);
 const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
-		flexShrink: 1,
-		maxWidth: 400
+		flexWrap: 'wrap'
 	}
 });
 

@@ -22,8 +22,10 @@ const Attachments: React.FC<IMessageAttachments> = React.memo(
 
 		const attachmentsElements = attachments.map((file: IAttachment, index: number) => {
 			const msg = getMessageFromAttachment(file, translateLanguage);
+			let content = null;
+
 			if (file && file.image_url) {
-				return (
+				content = (
 					<Image
 						key={file.image_url}
 						file={file}
@@ -40,7 +42,7 @@ const Attachments: React.FC<IMessageAttachments> = React.memo(
 			}
 
 			if (file && file.audio_url) {
-				return (
+				content = (
 					<Audio
 						key={file.audio_url}
 						file={file}
@@ -54,7 +56,7 @@ const Attachments: React.FC<IMessageAttachments> = React.memo(
 			}
 
 			if (file.video_url) {
-				return (
+				content = (
 					<Video
 						key={file.video_url}
 						file={file}
@@ -69,12 +71,17 @@ const Attachments: React.FC<IMessageAttachments> = React.memo(
 			}
 
 			if (file && file.actions && file.actions.length > 0) {
-				return <AttachedActions attachment={file} getCustomEmoji={getCustomEmoji} />;
+				content = <AttachedActions attachment={file} getCustomEmoji={getCustomEmoji} />;
 			}
+
 			if (typeof file.collapsed === 'boolean') {
-				return (
+				content = (
 					<CollapsibleQuote key={index} index={index} attachment={file} timeFormat={timeFormat} getCustomEmoji={getCustomEmoji} />
 				);
+			}
+
+			if (content && !(file.color || file.thumb_url || file.author_name || file.fields?.length)) {
+				return content;
 			}
 
 			return (
@@ -86,6 +93,7 @@ const Attachments: React.FC<IMessageAttachments> = React.memo(
 					getCustomEmoji={getCustomEmoji}
 					msg={msg}
 					showAttachment={showAttachment}
+					content={content}
 				/>
 			);
 		});

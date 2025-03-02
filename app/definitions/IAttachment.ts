@@ -6,6 +6,12 @@ export type TAttachmentEncryption = {
 	key: any; // JsonWebKey
 };
 
+export type AttachmentField = {
+	title: string;
+	value: string;
+	short?: boolean;
+};
+
 export interface IAttachment {
 	ts?: string | Date;
 	title?: string;
@@ -27,7 +33,7 @@ export interface IAttachment {
 	audio_size?: number;
 	title_link_download?: boolean;
 	attachments?: IAttachment[];
-	fields?: IAttachment[];
+	fields?: AttachmentField[];
 	author_name?: string;
 	author_icon?: string;
 	actions?: { type: string; msg: string; text: string }[];
