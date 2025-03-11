@@ -1,36 +1,76 @@
-# Rocket.Chat Mobile
+<h1 align="center">🚀 Rocket.Chat Mobile</h1>
 
-- **Supported server versions:** 0.70.0+
-- **Supported iOS versions**: 13.4+
-- **Supported Android versions**: 6.0+
+<p align="center">
+    <strong>The official mobile client for Rocket.Chat — the ultimate open-source communication platform.</strong>  
+</p>
 
-## Download
+<p align="center">
+    Stay connected and collaborate with your team from anywhere with our secure and powerful mobile app.
+</p>
 
-<a href="https://play.google.com/store/apps/details?id=chat.rocket.android">
-  <img alt="Download on Google Play" src="https://play.google.com/intl/en_us/badges/images/badge_new.png" height=43>
-</a>
-<a href="https://apps.apple.com/us/app/rocket-chat/id1148741252">
-  <img alt="Download on App Store" src="https://user-images.githubusercontent.com/7317008/43209852-4ca39622-904b-11e8-8ce1-cdc3aee76ae9.png" height=43>
-</a>
+## ✅ Supported Versions  
+| Platform | Supported Versions |
+|:---------|:-------------------|
+| **Rocket.Chat Server** | 0.70.0+ |
+| **iOS** | 13.4+ |
+| **Android** | 6.0+ |
 
-Check [our docs](https://developer.rocket.chat/docs/mobile-app) for  beta and Experimental versions.
+## 📥 Download the App  
+Get Rocket.Chat Mobile from the official app stores:  
 
-## Reporting an Issue
+<p align="center">
+    <a href="https://play.google.com/store/apps/details?id=chat.rocket.android" style="text-decoration: none;">
+      <img alt="Download on Google Play" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/360px-Google_Play_Store_Badge_EN.svg.png" height="50">
+  </a>
+    <a href="https://apps.apple.com/us/app/rocket-chat/id1148741252" style="text-decoration: none;">
+        <img alt="Download on App Store" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/270px-Download_on_the_App_Store_Badge.svg.png?20170219160111" height="50">
+    </a>
+</p>
+<br/>
 
-[Github Issues](https://github.com/RocketChat/Rocket.Chat.ReactNative/issues) are used to track todos, bugs, feature requests, and more.
+## 📖 Documentation  
+Looking for detailed setup instructions or want to try beta and experimental versions?  
+➡️ **[Mobile App Documentation](https://developer.rocket.chat/docs/mobile-app)**  
 
-Also check the [#react-native](https://open.rocket.chat/channel/react-native) community on [open.rocket.chat](https://open.rocket.chat). We'd like to help.
+## 🐛 Reporting Issues  
+Found a bug or have a feature request? We track all issues on GitHub:  
+➡️ **[Report an Issue](https://github.com/RocketChat/Rocket.Chat.ReactNative/issues)**  
 
-## Contributing
+Need help from the community? Join the conversation on our official Rocket.Chat channel:  
+➡️ **[#react-native](https://open.rocket.chat/channel/react-native)** on [open.rocket.chat](https://open.rocket.chat)  
 
-Are you a dev and would like to help? Found a bug that you would like to report or a missing feature that you would like to work on? Great! We have written down a [Contribution guide](https://github.com/RocketChat/Rocket.Chat.ReactNative/blob/develop/CONTRIBUTING.md) so you can start easily.
+## 👨‍💻 Contributing  
+Interested in helping improve Rocket.Chat Mobile?  
 
-## Whitelabel
-Do you want to make the app run on your own server only? [Follow our whitelabel documentation.](https://developer.rocket.chat/mobile-app/mobile-app-white-labelling)
+✅ Found a bug or missing feature you'd like to work on?  
+✅ Interested in contributing to the project?  
 
-## Engage with us
-### Share your story
-We’d love to hear about [your experience](https://survey.zohopublic.com/zs/e4BUFG) and potentially feature it on our [blog](https://www.rocket.chat/blog?utm_source=github&utm_medium=readme&utm_campaign=community).
+We’d love your help!  
+👉 **[Read the Contribution Guide](https://github.com/RocketChat/Rocket.Chat.ReactNative/blob/develop/CONTRIBUTING.md)**  
 
-### Subscribe for Updates
-Once a month our marketing team releases an email update with news about product releases, company related topics, events and use cases. [Sign up!](https://rocket.chat/newsletter/?utm_source=github&utm_medium=readme&utm_campaign=community)
+## 🎯 Whitelabeling  
+Want to customize Rocket.Chat Mobile to run exclusively on your server?  
+Follow our step-by-step whitelabeling guide:  
+➡️ **[Whitelabeling Guide](https://developer.rocket.chat/docs/mobile-app-white-labeling)**  
+
+## 💬 Share Your Experience  
+We’d love to hear how Rocket.Chat Mobile is helping your team!  
+👉 **[Share your story](https://survey.zohopublic.com/zs/e4BUFG)** — we might even feature you on our [blog](https://www.rocket.chat/blog?utm_source=github&utm_medium=readme&utm_campaign=community).  
+
+## 📢 Stay Updated  
+Stay in the loop with the latest product releases, updates, events, and use cases.  
+👉 **[Subscribe to our newsletter](https://rocket.chat/newsletter/?utm_source=github&utm_medium=readme&utm_campaign=community)**  
+
+<p align="center">
+    💙 Thank you for being part of the Rocket.Chat community!  
+</p>
+
+<h3 align="center">⭐️ Star us on GitHub if you find Rocket.Chat helpful! ⭐️</h3>
+
+<p align="center">
+    👉 <a href="https://github.com/RocketChat/Rocket.Chat.ReactNative"><b>Rocket.Chat Mobile on GitHub</b></a>
+</p>
+
+<p align="center">
+    🔐 Built with ❤️ by Rocket.Chat  
+</p>
