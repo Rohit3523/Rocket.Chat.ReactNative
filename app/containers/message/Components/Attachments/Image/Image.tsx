@@ -44,11 +44,12 @@ export const MessageImage = React.memo(({ uri, status, encrypted = false, imageP
 		overflow: 'hidden'
 	};
 
+	console.log('encrypted', encrypted, status)
 	if (encrypted && status === 'downloaded') {
 		return (
 			<>
 				<View style={styles.image} />
-				<OverlayComponent loading={false} style={styles.image} iconName='encrypted' showBackground={true} />
+				<OverlayComponent loading={false} style={styles.image} iconName='encrypted' />
 			</>
 		);
 	}
