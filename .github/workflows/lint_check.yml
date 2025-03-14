@@ -1,0 +1,121 @@
+name: ESLint on PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  eslint:
+    if: ${{ github.repository == 'RocketChat/Rocket.Chat.ReactNative' }}
+    name: Run ESLint on modified files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'yarn'
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Get Changed Files and Lines
+        run: |
+          FILES=$(git diff --name-only --diff-filter=ACM ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} -- '*.ts' '*.tsx' '*.js' '*.jsx')
+          echo "FILES=$(echo "$FILES" | tr '\n' ' ')" >> $GITHUB_ENV
+      
+          for file in $FILES; do
+            git diff -U0 ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }} -- $file | \
+            grep -oP '(?<=^@@ -\d+(,\d+)? \+)\d+(?=(,\d+)?)' | while read line; do
+              echo "$file:$line" >> changed-lines.txt
+            done
+          done
+
+      - name: Run ESLint on modified files
+        if: env.FILES != ''
+        run: |
+          npx eslint $FILES --format json > eslint-results.json || true
+          if [ ! -s eslint-results.json ]; then
+            echo "No lint issues found."
+            echo '{}' > eslint-results.json
+          fi
+
+      - name: Add ESLint comments to PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const results = JSON.parse(fs.readFileSync('eslint-results.json', 'utf8'));
+            if (results.length === 0) {
+              return;
+            }
+
+            const changedLinesByFile = {};
+            const changedLines = fs.readFileSync('changed-lines.txt', 'utf8').trim().split('\n');
+            for (const line of changedLines) {
+              const [file, lineNumber] = line.split(':');
+              if (!changedLinesByFile[file]) {
+                changedLinesByFile[file] = new Set();
+              }
+              changedLinesByFile[file].add(Number(lineNumber));
+            }
+
+            const pullRequest = context.payload.pull_request;
+            const repo = context.repo;
+            const commitId = pullRequest.head.sha;
+
+            for (const result of results) {
+              const filePath = path.relative(process.cwd(), result.filePath);
+
+              if (!changedLinesByFile[filePath]) continue;
+
+              for (const message of result.messages) {
+                if (message.line && changedLinesByFile[filePath].has(message.line)) {
+                  const diff = await github.rest.repos.getContent({
+                    owner: repo.owner,
+                    repo: repo.repo,
+                    path: filePath,
+                    ref: commitId
+                  });
+
+                  const fileContent = Buffer.from(diff.data.content, 'base64').toString('utf8');
+                  const lines = fileContent.split('\n');
+
+                  let position = 0;
+                  for (let i = 0; i < message.line; i++) {
+                    position += lines[i] ? lines[i].length + 1 : 1;
+                  }
+
+                  await github.rest.pulls.createReviewComment({
+                    owner: repo.owner,
+                    repo: repo.repo,
+                    pull_number: pullRequest.number,
+                    commit_id: commitId,
+                    body: `**${message.ruleId || 'ESLint'}:** ${message.message}`,
+                    path: filePath,
+                    position
+                  });
+                }
+              }
+            }
