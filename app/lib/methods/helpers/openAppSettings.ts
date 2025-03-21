@@ -9,3 +9,5 @@ export const openAppSettings = (): void => {
 		Linking.openSettings();
 	}
 };
+
+
