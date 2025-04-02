@@ -1,0 +1,99 @@
+name: Run Maestro Tests on Android
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  android-maestro-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Install Dependencies
+        run: npm install
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+
+      - name: Decode and save debug keystore
+        run: echo "${{ secrets.DEV_KEYSTORE }}" | base64 --decode > android/app/debug.keystore
+
+      - name: Set up environment variables
+        run: |
+          echo "DEV_KEYSTORE_FILE=debug.keystore" >> $GITHUB_ENV
+          echo "DEV_KEYSTORE_PASSWORD=${{ secrets.DEV_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "DEV_KEY_ALIAS=${{ secrets.DEV_KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "DEV_KEY_PASSWORD=${{ secrets.DEV_KEY_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install Platform Tools
+        run: sdkmanager "platform-tools"
+
+      - name: Verify adb Installation
+        run: adb version
+
+      - name: Enable KVM group permissions
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Cache Android build outputs
+        uses: actions/cache@v4
+        with:
+          path: android/app/build
+          key: ${{ runner.os }}-android-build-${{ hashFiles('android/app/build.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-android-build-
+
+      - name: Build Android Release APK
+        run: |
+          cd android
+          ./gradlew assembleExperimentalDebug
+
+      - uses: dniHze/maestro-test-action@v1
+      - name: Start Android Emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          ram-size: 2048M
+          target: default
+          script: |
+            adb install android/app/build/outputs/apk/experimental/debug/app-experimental-debug.apk
+            maestro test --format=html --output=report.html --no-ansi .maestro
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          title: Android Test Report
+          path: report.html

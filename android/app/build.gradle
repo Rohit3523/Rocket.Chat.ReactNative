@@ -98,6 +98,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file(rootProject.file("app/debug.keystore"))
+            storePassword System.getenv("DEV_KEYSTORE_PASSWORD") ?: "android"
+            keyAlias System.getenv("DEV_KEY_ALIAS") ?: "androiddebugkey"
+            keyPassword System.getenv("DEV_KEY_PASSWORD") ?: "android"
+        }
         release {
             v1SigningEnabled false
             if (project.hasProperty('KEYSTORE')) {
@@ -109,6 +115,16 @@ android {
         }
     }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled true
+                strippedNativeLibsDir 'build/intermediates/stripped_native_libs/release/out/lib'
+                unstrippedNativeLibsDir 'build/intermediates/merged_native_libs/release/out/lib'
+            }
+        }
         release {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds

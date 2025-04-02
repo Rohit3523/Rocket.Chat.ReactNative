@@ -1,5 +1,5 @@
 flows:
-  - room/create/*
+  - onboarding/*
   
 excludeTags:
   - util

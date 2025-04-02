@@ -74,3 +74,5 @@ e2e/e2e_account.ts
 junit.xml
 
 *.p8
+
+*.keystore
