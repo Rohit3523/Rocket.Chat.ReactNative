@@ -1,5 +1,11 @@
 flows:
-  - onboarding/*
+  - "**"
   
 excludeTags:
   - util
+
+executionOrder:
+  continueOnFailure: true
+  flowsOrder:
+    - onboarding
+    - room
