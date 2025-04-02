@@ -76,7 +76,7 @@ jobs:
         run: |
           cd android
           ./gradlew assembleExperimentalDebug
-          mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk android/app/app-experimental-debug.apk
+          mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
           ./gradlew clean
 
       - uses: dniHze/maestro-test-action@v1
