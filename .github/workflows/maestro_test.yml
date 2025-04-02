@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-node_modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install Dependencies
-        run: yarn install
+        run: yarn install 
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
 
       - name: Decode and save debug keystore
