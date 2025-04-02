@@ -76,6 +76,8 @@ jobs:
         run: |
           cd android
           ./gradlew assembleExperimentalDebug
+          mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk android/app/app-experimental-debug.apk
+          ./gradlew clean
 
       - uses: dniHze/maestro-test-action@v1
       - name: Start Android Emulator
@@ -87,7 +89,7 @@ jobs:
           disk-size: 4096M
           target: default
           script: |
-            adb install android/app/build/outputs/apk/experimental/debug/app-experimental-debug.apk
+            adb install android/app/app-experimental-debug.apk
             maestro test --format=html --output=report.html --no-ansi .maestro
 
       - name: Upload Test Report
