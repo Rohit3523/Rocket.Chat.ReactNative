@@ -3,8 +3,7 @@ name: Run Maestro Tests on Android
 on:
   push:
     branches:
-      - main
-  pull_request:
+      - '*'
 
 jobs:
   android-maestro-test:
