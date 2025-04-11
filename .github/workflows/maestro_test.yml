@@ -90,7 +90,8 @@ jobs:
           target: default
           script: |
             adb install android/app/app-experimental-debug.apk
-            maestro test --format=html --output=report.html --no-ansi .maestro
+            maestro record .maestro/01-onboarding/04-createuser.yaml --local
+            #maestro test --format=html --output=report.html --no-ansi .maestro
 
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
