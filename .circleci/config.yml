@@ -60,7 +60,7 @@ jobs:
           name: Configure Gradle Properties
           command: |
             mkdir -p ~/.gradle
-            cat > ~/.gradle/gradle.properties << EOF
+            cat > ~/.gradle/gradle.properties \<< EOF
             org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200
             org.gradle.daemon=false
             org.gradle.parallel=true
