@@ -13,6 +13,7 @@ jobs:
     environment:
       JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
       NODE_VERSION: 22
+      _JAVA_OPTIONS: "-Xmx3g"
     steps:
       - checkout
 
@@ -57,7 +58,7 @@ jobs:
           name: Build Android APK
           command: |
             cd android
-            ./gradlew assembleExperimentalDebug --build-cache --parallel --max-workers=4 --no-daemon -Dorg.gradle.jvmargs="-Xmx1024m"
+            ./gradlew assembleExperimentalDebug --build-cache --parallel --max-workers=4 --no-daemon -Dorg.gradle.jvmargs="-Xmx3g"
             mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
             ./gradlew clean
 
