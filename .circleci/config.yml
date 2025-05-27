@@ -55,6 +55,7 @@ jobs:
       - checkout
       - install_node_modules
       - install_gems
+      - install_maestro_cli
       - run:
           name: Build Android App
           command: |
