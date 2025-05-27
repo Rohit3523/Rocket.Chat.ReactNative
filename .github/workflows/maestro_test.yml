@@ -97,6 +97,24 @@ jobs:
         run: |
           npm install -g junit-viewer
           junit-viewer --results=maestro-report.xml --save=report.html
+      
+      - name: Move Failed Test Recordings Only
+        run: |
+          mkdir -p failed_recordings
+          while read -r line; do
+            TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
+            FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
+            FILE_PATH="recording/${FILE_ID}.mp4"
+            if [ -f "$FILE_PATH" ]; then
+              mv "$FILE_PATH" "failed_recordings/${FILE_ID}.mp4"
+            fi
+          done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
+
+      - name: Upload Failed Test Recordings
+        uses: actions/upload-artifact@v4
+        with:
+          name: Failed Test Recordings
+          path: failed_recordings/
 
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
