@@ -48,13 +48,12 @@ commands:
 jobs:
   run_maestro_android:
     docker:
-      - image: 'circleci/android:2023.01.2'
+      - image: 'cimg/android:2025.04'
     resource_class: large
     working_directory: ~/project
     steps:
       - checkout
       - install_node_modules
-      - install_gems
       - install_maestro_cli
       - run:
           name: Build Android App
