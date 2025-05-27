@@ -4,7 +4,7 @@ executors:
   android-executor:
     name: android/android-machine
     resource-class: large
-    tag: 2024.01.1
+    tag: 2025.04.1-node
 
 orbs:
   android: circleci/android@2.5.0
