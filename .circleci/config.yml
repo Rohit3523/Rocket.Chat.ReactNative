@@ -1,11 +1,10 @@
 version: 2.1
 
 executors:
-  android-executor: &android-executor
-    executor:
-      name: android/android-machine
-      resource-class: large
-      tag: 2024.01.1
+  android-executor:
+    name: android/android-machine
+    resource-class: large
+    tag: 2024.01.1
 
 orbs:
   android: circleci/android@2.5.0
