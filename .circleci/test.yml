@@ -1,0 +1,181 @@
+version: 2.1
+
+executors:
+  android-executor:
+    docker:
+      - image: circleci/android:api-30
+    working_directory: ~/repo
+
+jobs:
+  android-maestro-test:
+    executor: android-executor
+    environment:
+      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+      NODE_VERSION: 22
+    steps:
+      - checkout
+
+      # Restore node_modules cache
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "yarn.lock" }}
+            - node_modules-
+
+      - run:
+          name: Install Node.js
+          command: |
+            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            node -v
+            npm -v
+
+      - run:
+          name: Install Yarn
+          command: npm install -g yarn
+
+      - run:
+          name: Install Dependencies
+          command: yarn install
+
+      # Save node_modules cache
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: node_modules-{{ checksum "yarn.lock" }}
+
+      # Set up JDK 17
+      - run:
+          name: Install OpenJDK 17
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y openjdk-17-jdk
+            java -version
+
+      # Setup Android SDK & Platform Tools
+      - run:
+          name: Install Android SDK Command-line tools and Platform Tools
+          command: |
+            sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+            sdkmanager --licenses
+
+      # Setup Gradle cache restore
+      - restore_cache:
+          keys:
+            - gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
+            - gradle-cache-
+
+      - run:
+          name: Build Android APK
+          command: |
+            cd android
+            ./gradlew assembleExperimentalDebug --no-daemon --build-cache --parallel --max-workers=4
+            mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
+            ./gradlew clean
+
+      # Save Gradle cache after build
+      - save_cache:
+          paths:
+            - ~/.gradle/caches
+            - ~/.gradle/wrapper
+          key: gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
+
+      # Clear Gradle caches locally to free space (optional)
+      - run:
+          name: Clear Gradle Cache to Free Space
+          command: rm -rf ~/.gradle/caches/*
+
+      # Start Android emulator (using CircleCI orb for android emulator)
+      - run:
+          name: Start Android Emulator
+          command: |
+            # Start emulator manually with appropriate params
+            sdkmanager "system-images;android-30;default;x86_64"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
+            $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim &
+
+            # Wait for emulator to boot
+            adb wait-for-device
+            boot_completed="0"
+            until [[ "$boot_completed" == "1" ]]; do
+              boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
+              echo "Waiting for emulator to boot..."
+              sleep 5
+            done
+            echo "Emulator is ready."
+
+      - run:
+          name: Run Maestro Tests
+          command: |
+            mkdir -p recording
+            adb install android/app/app-experimental-debug.apk
+            maestro test .maestro --format junit --output maestro-report.xml
+
+      # Generate HTML report from JUnit XML
+      - run:
+          name: Generate HTML from JUnit XML
+          command: |
+            npm install -g junit-viewer
+            junit-viewer --results=maestro-report.xml --save=report.html
+
+      # Store artifacts (CircleCI equivalent to upload artifacts)
+      - store_artifacts:
+          path: report.html
+          destination: android-test-report
+
+      - store_artifacts:
+          path: maestro-report.xml
+          destination: maestro-report-xml
+
+      # Store failed test recordings (assuming you save them)
+      - run:
+          name: Move Failed Test Recordings Only
+          command: |
+            mkdir -p failed_recordings
+            while read -r line; do
+              TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
+              FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
+              FILE_PATH="recording/${FILE_ID}.mp4"
+              if [ -f "$FILE_PATH" ]; then
+                mv "$FILE_PATH" "failed_recordings/${FILE_ID}.mp4"
+              fi
+            done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
+
+      - store_artifacts:
+          path: failed_recordings
+          destination: failed-recordings
+
+      # (Optional) Post PR comment with failed videos using GitHub CLI
+      - run:
+          name: Comment Failed Test Videos on PR
+          when: always
+          command: |
+            if [[ -n "${CIRCLE_PULL_REQUEST}" ]]; then
+              gh auth login --with-token <<< "$GITHUB_TOKEN"
+              MESSAGE="### ❌ Failed Maestro Tests with Recordings\n"
+              HAS_FAILURES=0
+
+              while read -r line; do
+                TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
+                FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
+                FILE_PATH="recording/${FILE_ID}.mp4"
+                ARTIFACT_LINK="${CIRCLE_BUILD_URL}/artifacts"
+
+                if [ -f "$FILE_PATH" ]; then
+                  HAS_FAILURES=1
+                  MESSAGE+="🔴 **$TEST_ID** - [🎥 Recording]($ARTIFACT_LINK)\n"
+                fi
+              done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
+
+              if [ "$HAS_FAILURES" -eq 1 ]; then
+                PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | grep -oE '[0-9]+$')
+                gh pr comment $PR_NUMBER --body "$MESSAGE"
+              fi
+            fi
+          environment:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+workflows:
+  version: 2
+  android-maestro:
+    jobs:
+      - android-maestro-test
