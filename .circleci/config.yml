@@ -1,10 +1,14 @@
 version: 2.1
 
 executors:
-  android-executor:
-    docker:
-      - image: circleci/android:api-30
-    working_directory: ~/repo
+android-executor: &android-executor
+  executor:
+    name: android/android-machine
+    resource-class: large
+    tag: 2024.01.1
+
+orbs:
+  android: circleci/android@2.5.0
 
 jobs:
   android-maestro-test:
@@ -20,14 +24,6 @@ jobs:
           keys:
             - node_modules-{{ checksum "yarn.lock" }}
             - node_modules-
-
-      - run:
-          name: Install Node.js
-          command: |
-            curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-            node -v
-            npm -v
 
       - run:
           name: Install Yarn
