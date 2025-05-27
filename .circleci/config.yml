@@ -70,7 +70,6 @@ jobs:
             android.enableJetifier=true
             # Disable unnecessary tasks for CI
             android.enableR8.fullMode=false
-            android.enableBuildCache=true
             EOF
 
       - run:
