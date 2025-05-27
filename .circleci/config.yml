@@ -21,10 +21,10 @@ jobs:
           keys:
             - node_modules-{{ checksum "yarn.lock" }}
             - node_modules-
-            
+
       - run:
           name: Install Dependencies
-          command: yarn install
+          command: yarn install --immutable
 
       # Save node_modules cache
       - save_cache:
@@ -57,7 +57,7 @@ jobs:
           name: Build Android APK
           command: |
             cd android
-            ./gradlew assembleExperimentalDebug --no-daemon --build-cache --parallel --max-workers=4
+            ./gradlew assembleExperimentalDebug --build-cache --parallel --max-workers=4 --no-daemon -Dorg.gradle.jvmargs="-Xmx1024m"
             mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
             ./gradlew clean
 
@@ -73,24 +73,16 @@ jobs:
           name: Clear Gradle Cache to Free Space
           command: rm -rf ~/.gradle/caches/*
 
-      # Start Android emulator (using CircleCI orb for android emulator)
+      - android/create-avd:
+          avd-name: Pixel_API_31_AOSP
+          install: true
+          system-image: system-images;android-31;default;x86_64
       - run:
-          name: Start Android Emulator
+          name: Setup emulator
           command: |
-            # Start emulator manually with appropriate params
-            sdkmanager "system-images;android-30;default;x86_64"
-            echo "no" | avdmanager create avd -n test -k "system-images;android-30;default;x86_64" --force
-            $ANDROID_HOME/emulator/emulator -avd test -no-window -no-audio -no-boot-anim &
-
-            # Wait for emulator to boot
-            adb wait-for-device
-            boot_completed="0"
-            until [[ "$boot_completed" == "1" ]]; do
-              boot_completed=$(adb shell getprop sys.boot_completed | tr -d '\r')
-              echo "Waiting for emulator to boot..."
-              sleep 5
-            done
-            echo "Emulator is ready."
+            echo "hw.lcd.density = 440" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
+            echo "hw.lcd.height = 2280" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
+            echo "hw.lcd.width = 1080" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
 
       - run:
           name: Run Maestro Tests
