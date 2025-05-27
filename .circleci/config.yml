@@ -13,7 +13,7 @@ jobs:
       JAVA_OPTS: '-Xms512m -Xmx2g'
       GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
       TERM: dumb
-    resource_class: xlarge
+    resource_class: large
     steps:
       - checkout
 
