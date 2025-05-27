@@ -150,7 +150,7 @@ jobs:
           when: always
           command: |
             if [[ -n "${CIRCLE_PULL_REQUEST}" ]]; then
-              gh auth login --with-token <<< "$GITHUB_TOKEN"
+              gh auth login --with-token \<<< "$GITHUB_TOKEN"
               MESSAGE="### ❌ Failed Maestro Tests with Recordings\n"
               HAS_FAILURES=0
 
