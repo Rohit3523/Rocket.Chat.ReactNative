@@ -1,11 +1,5 @@
 version: 2.1
 
-docker:
-  - image: cimg/android:2025.04-node
-
-orbs:
-  android: circleci/android@2.5.0
-
 jobs:
   android-maestro-test:
     docker:
@@ -13,8 +7,7 @@ jobs:
     environment:
       JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
       NODE_VERSION: 22
-      _JAVA_OPTIONS: "-Xmx3g"
-    resource_class: large
+    resource_class: xlarge
     steps:
       - checkout
 
@@ -59,7 +52,7 @@ jobs:
           name: Build Android APK
           command: |
             cd android
-            ./gradlew assembleExperimentalDebug --build-cache --parallel --max-workers=4 --no-daemon -Dorg.gradle.jvmargs="-Xmx3g"
+            ./gradlew assembleExperimentalDebug --build-cache
             mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
             ./gradlew clean
 
