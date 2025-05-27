@@ -124,6 +124,4 @@ commands:
 workflows:
   build-and-test:
     jobs:
-      - e2e-test-android:
-          requires:
-            - e2e-build-android
+      - e2e-build-android
