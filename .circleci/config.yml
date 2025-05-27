@@ -1,72 +1,129 @@
-version: 2.1
+defaults: &defaults
+  working_directory: ~/repo
+
+android-executor: &android-executor
+  executor:
+    name: android/android-machine
+    resource-class: large
+    tag: 2024.01.1
+
 orbs:
-  android: circleci/android@3.1.0
+  android: circleci/android@2.5.0
+
+macos: &macos
+  macos:
+    xcode: "16.2.0"
+  resource_class: macos.m1.medium.gen1
+
+bash-env: &bash-env
+  BASH_ENV: "~/.nvm/nvm.sh"
+
+android-env: &android-env
+  JAVA_OPTS: '-Xms512m -Xmx2g'
+  GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
+  TERM: dumb
+
+install-npm-modules: &install-npm-modules
+  name: Install NPM modules
+  command: |
+    yarn global add node-gyp
+    yarn
+
+restore-npm-cache-linux: &restore-npm-cache-linux
+  name: Restore NPM cache
+  key: node-modules-{{ checksum "yarn.lock" }}
+
+save-npm-cache-linux: &save-npm-cache-linux
+  key: node-modules-{{ checksum "yarn.lock" }}
+  name: Save NPM cache
+  paths:
+    - ./node_modules
+
+restore-npm-cache-mac: &restore-npm-cache-mac
+  name: Restore NPM cache
+  key: node-v1-mac-{{ checksum "yarn.lock" }}
+
+save-npm-cache-mac: &save-npm-cache-mac
+  key: node-v1-mac-{{ checksum "yarn.lock" }}
+  name: Save NPM cache
+  paths:
+    - ./node_modules
+
+restore-gems-cache: &restore-gems-cache
+  name: Restore gems cache
+  key: bundle-v1-{{ checksum "Gemfile.lock" }}
+
+save-gems-cache: &save-gems-cache
+  name: Save gems cache
+  key: bundle-v1-{{ checksum "Gemfile.lock" }}
+  paths:
+    - vendor/bundle
+
+update-fastlane-ios: &update-fastlane-ios
+  name: Update Fastlane
+  command: |
+    bundle install
+  working_directory: ios
+
+update-fastlane-android: &update-fastlane-android
+  name: Update Fastlane
+  command: |
+    bundle install --path gems
+  working_directory: android
+
+save-gradle-cache: &save-gradle-cache
+  name: Save gradle cache
+  key: android-{{ checksum "android/build.gradle" }}-{{ checksum  "android/app/build.gradle" }}
+  paths:
+    - ~/.gradle
+
+restore_cache: &restore-gradle-cache
+  name: Restore gradle cache
+  key: android-{{ checksum "android/build.gradle" }}-{{ checksum  "android/app/build.gradle" }}
+
+# COMMANDS
 commands:
-  install_node_modules:
-    steps:
-      - run:
-          name: Install Node Modules
-          command: yarn
-  install_maestro_cli:
-    steps:
-      - run:
-          name: Install Maestro CLI
-          command: |
-            curl -Ls "https://get.maestro.mobile.dev" | bash
-            echo 'export PATH="$HOME/.maestro/bin:$PATH"' >> $BASH_ENV
-            source $BASH_ENV
-  install_gems:
-    steps:
-      - run:
-          name: Install Gems
-          command: |
-            rbenv install
-            gem install bundler:2.5.3
-            bundle install
-  run-maestro-tests:
-    description: Run Maestro Tests
-    parameters:
-      platform:
-        type: enum
-        enum:
-          - android
-        description: Platform to run the tests for
-      maestro_file:
-        type: string
-        description: Path to the Maestro test file
-    steps:
-      - run:
-          name: Run Maestro Tests for << parameters.platform >>
-          command: |
-            maestro test << parameters.maestro_file >>
-            MAESTRO_STATUS=$?
-            if [ "$MAESTRO_STATUS" -eq 0 ]; then
-                echo "✅ Tests Passed"
-            else
-                echo "❌ Tests Failed"
-            fi
-jobs:
-  run_maestro_android:
-    docker:
-      - image: 'cimg/android:2025.04-node'
-    resource_class: large
-    working_directory: ~/project
+  e2e-build-android:
+    <<: *defaults
+    <<: *android-executor
+    environment:
+      <<: *android-env
     steps:
       - checkout
-      - install_node_modules
-      - install_maestro_cli
+      - restore_cache: *restore-npm-cache-linux
+      - run: *install-npm-modules
+      - save_cache: *save-npm-cache-linux
+      - restore_cache: *restore-gradle-cache
       - run:
-          name: Build Android App
+          name: Configure Gradle
           command: |
-            cd android
-            ./gradlew assembleExperimentalDebug --no-daemon --console=plain
+            echo -e "" > ./gradle.properties
+            echo -e "android.useAndroidX=true" >> ./gradle.properties
+            echo -e "android.enableJetifier=true" >> ./gradle.properties
+            echo -e "reactNativeArchitectures=armeabi-v7a,arm64-v8a,x86,x86_64" >> ./gradle.properties
+            echo -e "newArchEnabled=false" >> ./gradle.properties
+            echo -e "hermesEnabled=true" >> ./gradle.properties
+            echo -e "VERSIONCODE=$CIRCLE_BUILD_NUM" >> ./gradle.properties
+            echo -e "APPLICATION_ID=chat.rocket.reactnative" >> ./gradle.properties
+          working_directory: android
+      - run:
+          name: Build Android
+          command: |
+            export RUNNING_E2E_TESTS=true
+            yarn e2e:android-build
+      - save_cache: *save-gradle-cache
       - store_artifacts:
-          path: ./android/app/build/outputs/apk/experimental/debug/app-experimental-debug.apk
-      - run-maestro-tests:
-          platform: android
-          maestro_file: .maestro/login.yml
+          path: android/app/build/outputs/apk/experimental/release/app-experimental-release.apk
+      - store_artifacts:
+          path: android/app/build/outputs/apk/androidTest/experimental/release/app-experimental-release-androidTest.apk
+      - persist_to_workspace:
+          root: /home/circleci/repo
+          paths:
+            - android/app/build/outputs/apk/
+
 workflows:
-  version: 2
-  maestro_tests:
+  build-and-test:
     jobs:
-      - run_maestro_android
+      - e2e-test-android:
+          requires:
+            - e2e-build-android
