@@ -1,190 +1,72 @@
 version: 2.1
-
 orbs:
-  android: circleci/android@2.5.0
-
+  android: circleci/android@3.1.0
+commands:
+  install_node_modules:
+    steps:
+      - run:
+          name: Install Node Modules
+          command: yarn
+  install_maestro_cli:
+    steps:
+      - run:
+          name: Install Maestro CLI
+          command: |
+            curl -Ls "https://get.maestro.mobile.dev" | bash
+            echo 'export PATH="$HOME/.maestro/bin:$PATH"' >> $BASH_ENV
+            source $BASH_ENV
+  install_gems:
+    steps:
+      - run:
+          name: Install Gems
+          command: |
+            rbenv install
+            gem install bundler:2.5.3
+            bundle install
+  run-maestro-tests:
+    description: Run Maestro Tests
+    parameters:
+      platform:
+        type: enum
+        enum:
+          - android
+        description: Platform to run the tests for
+      maestro_file:
+        type: string
+        description: Path to the Maestro test file
+    steps:
+      - run:
+          name: Run Maestro Tests for << parameters.platform >>
+          command: |
+            maestro test << parameters.maestro_file >>
+            MAESTRO_STATUS=$?
+            if [ "$MAESTRO_STATUS" -eq 0 ]; then
+                echo "✅ Tests Passed"
+            else
+                echo "❌ Tests Failed"
+            fi
 jobs:
-  android-maestro-test:
+  run_maestro_android:
     docker:
-      - image: cimg/android:2025.04-node
-    environment:
-      JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
-      NODE_VERSION: 22
-      JAVA_OPTS: '-Xms1g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200'
-      GRADLE_OPTS: '-Xmx4g -XX:MaxMetaspaceSize=512m -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError"'
-      TERM: dumb
-      _JAVA_OPTIONS: '-Xmx4g'
-    resource_class: large
+      - image: 'circleci/android:2023.01.2'
+    resource_class: xlarge
+    working_directory: ~/project
     steps:
       - checkout
-
-      # Restore node_modules cache 
-      - restore_cache:
-          keys:
-            - node_modules-{{ checksum "yarn.lock" }}
-            - node_modules-
-
+      - install_node_modules
+      - install_gems
       - run:
-          name: Install Dependencies
-          command: yarn install --immutable
-
-      # Save node_modules cache
-      - save_cache:
-          paths:
-            - ./node_modules
-          key: node_modules-{{ checksum "yarn.lock" }}
-
-      # Set up JDK 17
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y openjdk-17-jdk
-            java -version
-
-      # Setup Android SDK & Platform Tools
-      - run:
-          name: Install Android SDK Command-line tools and Platform Tools
-          command: |
-            sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3"
-            sdkmanager --licenses
-
-      # Setup Gradle cache restore
-      - restore_cache:
-          keys:
-            - gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
-            - gradle-cache-
-
-      # Configure gradle.properties for memory optimization
-      - run:
-          name: Configure Gradle Properties
-          command: |
-            mkdir -p ~/.gradle
-            cat > ~/.gradle/gradle.properties \<< EOF
-            org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200
-            org.gradle.daemon=false
-            org.gradle.parallel=true
-            org.gradle.configureondemand=true
-            org.gradle.caching=true
-            android.useAndroidX=true
-            android.enableJetifier=true
-            # Disable unnecessary tasks for CI
-            android.enableR8.fullMode=false
-            EOF
-
-      - run:
-          name: Build Android APK
+          name: Build Android App
           command: |
             cd android
-            # Clean before build to ensure fresh state
-            ./gradlew clean
-            # Build with memory-optimized settings
-            ./gradlew assembleExperimentalDebug \
-              --build-cache \
-              --no-daemon \
-              --max-workers=2 \
-              -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC"
-            mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
-
-      # Save Gradle cache after build
-      - save_cache:
-          paths:
-            - ~/.gradle/caches
-            - ~/.gradle/wrapper
-          key: gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
-
-      # Clear Gradle caches locally to free space
-      - run:
-          name: Clear Gradle Cache to Free Space
-          command: |
-            rm -rf ~/.gradle/caches/*/kotlin-dsl
-            rm -rf ~/.gradle/caches/*/scripts
-            find ~/.gradle/caches -name "*.lock" -delete
-
-      - android/create-avd:
-          avd-name: Pixel_API_31_AOSP
-          install: true
-          system-image: system-images;android-31;default;x86_64
-      - run:
-          name: Setup emulator
-          command: |
-            echo "hw.lcd.density = 440" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
-            echo "hw.lcd.height = 2280" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
-            echo "hw.lcd.width = 1080" >> ~/.android/avd/Pixel_API_31_AOSP.avd/config.ini
-
-      - run:
-          name: Run Maestro Tests
-          command: |
-            mkdir -p recording
-            adb install android/app/app-experimental-debug.apk
-            maestro test .maestro --format junit --output maestro-report.xml
-
-      # Generate HTML report from JUnit XML
-      - run:
-          name: Generate HTML from JUnit XML
-          command: |
-            npm install -g junit-viewer
-            junit-viewer --results=maestro-report.xml --save=report.html
-
-      # Store artifacts (CircleCI equivalent to upload artifacts)
+            ./gradlew assembleDevRelease --no-daemon --console=plain
       - store_artifacts:
-          path: report.html
-          destination: android-test-report
-
-      - store_artifacts:
-          path: maestro-report.xml
-          destination: maestro-report-xml
-
-      # Store failed test recordings (assuming you save them)
-      - run:
-          name: Move Failed Test Recordings Only
-          command: |
-            mkdir -p failed_recordings
-            while read -r line; do
-              TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
-              FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
-              FILE_PATH="recording/${FILE_ID}.mp4"
-              if [ -f "$FILE_PATH" ]; then
-                mv "$FILE_PATH" "failed_recordings/${FILE_ID}.mp4"
-              fi
-            done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
-
-      - store_artifacts:
-          path: failed_recordings
-          destination: failed-recordings
-
-      # (Optional) Post PR comment with failed videos using GitHub CLI
-      - run:
-          name: Comment Failed Test Videos on PR
-          when: always
-          command: |
-            if [[ -n "${CIRCLE_PULL_REQUEST}" ]]; then
-              gh auth login --with-token \<<< "$GITHUB_TOKEN"
-              MESSAGE="### ❌ Failed Maestro Tests with Recordings\n"
-              HAS_FAILURES=0
-
-              while read -r line; do
-                TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
-                FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
-                FILE_PATH="recording/${FILE_ID}.mp4"
-                ARTIFACT_LINK="${CIRCLE_BUILD_URL}/artifacts"
-
-                if [ -f "$FILE_PATH" ]; then
-                  HAS_FAILURES=1
-                  MESSAGE+="🔴 **$TEST_ID** - [🎥 Recording]($ARTIFACT_LINK)\n"
-                fi
-              done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
-
-              if [ "$HAS_FAILURES" -eq 1 ]; then
-                PR_NUMBER=$(echo $CIRCLE_PULL_REQUEST | grep -oE '[0-9]+$')
-                gh pr comment $PR_NUMBER --body "$MESSAGE"
-              fi
-            fi
-          environment:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+          path: ./android/app/build/outputs/apk/dev/release/app-dev-release.apk
+      - run-maestro-tests:
+          platform: android
+          maestro_file: .maestro/login.yml
 workflows:
   version: 2
-  android-maestro:
+  maestro_tests:
     jobs:
-      - android-maestro-test
+      - run_maestro_android
