@@ -10,9 +10,10 @@ jobs:
     environment:
       JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
       NODE_VERSION: 22
-      JAVA_OPTS: '-Xms512m -Xmx2g'
-      GRADLE_OPTS: '-Xmx3g -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx2g -XX:+HeapDumpOnOutOfMemoryError"'
+      JAVA_OPTS: '-Xms1g -Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200'
+      GRADLE_OPTS: '-Xmx4g -XX:MaxMetaspaceSize=512m -Dorg.gradle.daemon=false -Dorg.gradle.jvmargs="-Xmx4g -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+HeapDumpOnOutOfMemoryError"'
       TERM: dumb
+      _JAVA_OPTIONS: '-Xmx4g'
     resource_class: large
     steps:
       - checkout
@@ -54,13 +55,37 @@ jobs:
             - gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
             - gradle-cache-
 
+      # Configure gradle.properties for memory optimization
+      - run:
+          name: Configure Gradle Properties
+          command: |
+            mkdir -p ~/.gradle
+            cat > ~/.gradle/gradle.properties << EOF
+            org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200
+            org.gradle.daemon=false
+            org.gradle.parallel=true
+            org.gradle.configureondemand=true
+            org.gradle.caching=true
+            android.useAndroidX=true
+            android.enableJetifier=true
+            # Disable unnecessary tasks for CI
+            android.enableR8.fullMode=false
+            android.enableBuildCache=true
+            EOF
+
       - run:
           name: Build Android APK
           command: |
             cd android
-            ./gradlew assembleExperimentalDebug --build-cache
-            mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
+            # Clean before build to ensure fresh state
             ./gradlew clean
+            # Build with memory-optimized settings
+            ./gradlew assembleExperimentalDebug \
+              --build-cache \
+              --no-daemon \
+              --max-workers=2 \
+              -Dorg.gradle.jvmargs="-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+UseG1GC"
+            mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
 
       # Save Gradle cache after build
       - save_cache:
@@ -69,10 +94,13 @@ jobs:
             - ~/.gradle/wrapper
           key: gradle-cache-{{ checksum "android/gradle/wrapper/gradle-wrapper.properties" }}
 
-      # Clear Gradle caches locally to free space (optional)
+      # Clear Gradle caches locally to free space
       - run:
           name: Clear Gradle Cache to Free Space
-          command: rm -rf ~/.gradle/caches/*
+          command: |
+            rm -rf ~/.gradle/caches/*/kotlin-dsl
+            rm -rf ~/.gradle/caches/*/scripts
+            find ~/.gradle/caches -name "*.lock" -delete
 
       - android/create-avd:
           avd-name: Pixel_API_31_AOSP
