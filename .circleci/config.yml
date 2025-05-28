@@ -580,4 +580,4 @@ workflows:
             - android-hold-google-play-production-experimental
 
       # Android Automatic Experimental
-      - android-automatic-build-experimental:
+      - android-automatic-build-experimental
