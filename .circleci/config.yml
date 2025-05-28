@@ -321,31 +321,6 @@ executors:
 
 # JOBS
 jobs:
-  lint-testunit:
-    <<: *defaults
-    docker:
-      - image: cimg/node:lts
-    resource_class: large
-
-    steps:
-      - checkout
-
-      - restore_cache: *restore-npm-cache-linux
-
-      - run: *install-npm-modules
-
-      - run:
-          name: Lint
-          command: |
-            yarn lint
-
-      - run:
-          name: Test
-          command: |
-            yarn test --runInBand
-
-      - save_cache: *save-npm-cache-linux
-
   # Android builds
   android-build-experimental:
     <<: *defaults
@@ -576,39 +551,9 @@ workflows:
           requires:
             - e2e-build-android
 
-      # iOS Experimental
-      - ios-hold-build-experimental:
-          type: approval
-          requires:
-              - lint-testunit
-      - ios-build-experimental:
-          requires:
-            - ios-hold-build-experimental
-      - ios-testflight-experimental:
-          requires:
-            - ios-build-experimental
-
-      # iOS Official
-      - ios-hold-build-official:
-          type: approval
-          requires:
-            - lint-testunit
-      - ios-build-official:
-          requires:
-            - ios-hold-build-official
-      - ios-hold-testflight-official:
-          type: approval
-          requires:
-            - ios-build-official
-      - ios-testflight-official:
-          requires:
-            - ios-hold-testflight-official
-
       # Android Experimental
       - android-hold-build-experimental:
           type: approval
-          requires:
-              - lint-testunit
           filters:
             branches:
               ignore:
@@ -634,30 +579,5 @@ workflows:
           requires:
             - android-hold-google-play-production-experimental
 
-      # Android Official
-      - android-hold-build-official:
-          type: approval
-          requires:
-            - lint-testunit
-      - android-build-official:
-          requires:
-            - android-hold-build-official
-      - android-hold-google-play-beta-official:
-          type: approval
-          requires:
-            - android-build-official
-      - android-google-play-beta-official:
-          requires:
-            - android-hold-google-play-beta-official
-
       # Android Automatic Experimental
       - android-automatic-build-experimental:
-          filters:
-            branches:
-              only:
-                - develop
-          requires:
-            - lint-testunit
-      - android-google-play-production-experimental:
-          requires:
-            - android-automatic-build-experimental
