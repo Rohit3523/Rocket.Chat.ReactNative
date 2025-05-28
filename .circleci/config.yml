@@ -405,11 +405,6 @@ jobs:
             echo -e "hermesEnabled=true" >> ./gradle.properties
             echo -e "VERSIONCODE=$CIRCLE_BUILD_NUM" >> ./gradle.properties
             echo -e "APPLICATION_ID=chat.rocket.reactnative" >> ./gradle.properties
-            echo -e "BugsnagAPIKey=$BUGSNAG_KEY" >> ./gradle.properties
-            echo -e "KEYSTORE=$KEYSTORE_EXPERIMENTAL" >> ./gradle.properties
-            echo -e "KEYSTORE_PASSWORD=$KEYSTORE_EXPERIMENTAL_PASSWORD" >> ./gradle.properties
-            echo -e "KEY_ALIAS=$KEYSTORE_EXPERIMENTAL_ALIAS" >> ./gradle.properties
-            echo -e "KEY_PASSWORD=$KEYSTORE_EXPERIMENTAL_PASSWORD" >> ./gradle.properties
           working_directory: android
       - run:
           name: Build Android
