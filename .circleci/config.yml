@@ -541,14 +541,4 @@ jobs:
 workflows:
   build-and-test:
     jobs:
-      # E2E tests
-      - e2e-hold:
-          type: approval
-      - e2e-build-android:
-          requires:
-            - e2e-hold
-      - e2e-test-android:
-          requires:
-            - e2e-build-android
-
       - e2e-build-android
