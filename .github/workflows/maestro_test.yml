@@ -29,11 +29,12 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Install Maestro
-        run: curl -fsSL "https://get.maestro.mobile.dev" | bash
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          export PATH="$PATH":"$HOME/.maestro/bin"
 
       - name: Install Dependencies
-        run: yarn install 
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: yarn install
 
       - name: Generate Debug Keystore in Default Location
         run: |
