@@ -396,7 +396,7 @@ jobs:
           name: Create gradle.properties
           command: |
             mkdir -p ~/.gradle
-            echo "org.gradle.jvmargs=-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" > ~/.gradle/gradle.properties
+            echo "org.gradle.jvmargs=-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" > ~/.gradle/gradle.properties
       - run:
           name: Configure Gradle
           command: |
