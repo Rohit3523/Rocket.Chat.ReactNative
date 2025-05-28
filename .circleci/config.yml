@@ -409,17 +409,15 @@ jobs:
       - run:
           name: Build Android
           command: |
-            export RUNNING_E2E_TESTS=true
-            yarn e2e:android-build
+            ./gradlew assembleExperimentalRelease
+          working_directory: android
       - save_cache: *save-gradle-cache
       - store_artifacts:
           path: android/app/build/outputs/apk/experimental/release/app-experimental-release.apk
-      - store_artifacts:
-          path: android/app/build/outputs/apk/androidTest/experimental/release/app-experimental-release-androidTest.apk
       - persist_to_workspace:
           root: /home/circleci/repo
           paths:
-            - android/app/build/outputs/apk/
+            - android/app/build/outputs/apk/experimental/release/app-experimental-release.apk
 
   e2e-test-android:
     <<: *defaults
