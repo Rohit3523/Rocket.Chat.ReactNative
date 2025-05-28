@@ -386,14 +386,17 @@ jobs:
   e2e-build-android:
     <<: *defaults
     <<: *android-executor
-    environment:
-      <<: *android-env
     steps:
       - checkout
       - restore_cache: *restore-npm-cache-linux
       - run: *install-npm-modules
       - save_cache: *save-npm-cache-linux
       - restore_cache: *restore-gradle-cache
+      - run:
+          name: Create gradle.properties
+          command: |
+            mkdir -p ~/.gradle
+            echo "org.gradle.jvmargs=-Xmx4096m -XX:MaxPermSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8" > ~/.gradle/gradle.properties
       - run:
           name: Configure Gradle
           command: |
