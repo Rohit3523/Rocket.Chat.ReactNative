@@ -42,6 +42,9 @@ jobs:
           disk-size: 4096M
           target: google_apis
           profile: pixel_7_pro
+          disable-animations: true
+          gpu: host
+          headless: true
           script: |
             avdmanager list device
             mkdir recording
