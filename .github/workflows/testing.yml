@@ -43,8 +43,7 @@ jobs:
           script: |
             mkdir recording
             adb install app-experimental-debug.apk
-            adb shell screenrecord /sdcard/demo.mp4 &
-            RECORD_PID=$!
+            adb shell screenrecord /sdcard/demo.mp4 & RECORD_PID=$!
             adb shell am start -n chat.rocket.reactnative/.MainActivity
             sleep 10
             kill $RECORD_PID
