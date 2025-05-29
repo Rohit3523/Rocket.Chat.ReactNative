@@ -22,8 +22,7 @@ name: "Login Test"
     id: login-view-email
 - inputText:
     text: rohit.bansal@gmail.com
-- tapOn:
-    id: login-view-password
+- pressKey: Enter
 - inputText:
     text: rohit.bansal@gmail.com
 - tapOn:
