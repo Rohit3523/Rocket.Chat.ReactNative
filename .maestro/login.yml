@@ -12,26 +12,4 @@ name: "Login Test"
 - extendedWaitUntil:
     visible: "Add Workspace"
     timeout: 10000
-- tapOn:
-    id: new-server-view-input
-- inputText:
-    text: https://mobile.rocket.chat
-- tapOn: Connect
-- tapOn: Login
-- extendedWaitUntil:
-    visible:
-      id: 'login-view'
-    timeout: 2000
-- tapOn:
-    id: 'login-view-email'
-- inputText: rohit.bansal@gmail.com
-- pressKey: enter
-- tapOn:
-    id: 'login-view-password'
-- inputText: rohit.bansal@gmail.com
-- pressKey: enter
-- extendedWaitUntil:
-    visible:
-      id: 'rooms-list-view'
-    timeout: 30000
 - stopRecording
