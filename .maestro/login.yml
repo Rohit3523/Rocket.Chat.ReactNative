@@ -13,5 +13,4 @@ name: "Login Test"
     visible:
       id: login-view
       timeout: 10000
-      continueOnError: true
 - stopRecording

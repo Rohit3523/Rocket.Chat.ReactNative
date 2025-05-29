@@ -41,5 +41,13 @@ jobs:
           ram-size: 4096M
           disk-size: 4096M
           script: |
+            mkdir recording
             adb install app-experimental-release.apk
             maestro test .maestro
+
+      - name: Upload Recordings
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test Recordings
+          path: recording
+        
