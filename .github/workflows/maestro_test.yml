@@ -48,6 +48,15 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
 
+      - name: Cat gradle.properties
+        run: cat android/gradle.properties
+
+      - name: Check if keystore exists
+        run: |
+          if [ ! -f android/keystore/release.keystore ]; then
+            echo "Keystore not found"
+            exit 1
+          fi
 
       - name: Enable KVM group permissions
         run: |
