@@ -10,6 +10,7 @@ name: "Login Test"
 - extendedWaitUntil:
     visible:
       id: login-view
+      timeout: 10000
 - tapOn:
     id: new-server-view-input
 - inputText:
