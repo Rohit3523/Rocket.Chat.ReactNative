@@ -81,7 +81,23 @@ jobs:
           cd android
           ./gradlew assembleExperimentalRelease --no-daemon --build-cache --parallel --max-workers=4
           mv app/build/outputs/apk/experimental/release/app-experimental-release.apk app/app-experimental-release.apk
-          ./gradlew clean
+
+      - name: Free Space Before Cleanup
+        run: |
+          echo "Free space before cleanup:"
+          df -h
+
+      - name: Maximize build space
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-swapfile: 'true'
+
+      - name: Free Space After Cleanup
+        run: |
+          echo "Free space:"
+          df -h
 
       - name: Start Android Emulator and Run Maestro Tests
         uses: reactivecircus/android-emulator-runner@v2
