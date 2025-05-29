@@ -35,7 +35,7 @@ jobs:
 
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/release.keystore
 
       - name: Set gradle.properties
         run: |
@@ -50,6 +50,8 @@ jobs:
       
       - name: Give file tree
         run: |
+          ls -la
+          cd android
           ls -la
 
       - name: Install Dependencies
