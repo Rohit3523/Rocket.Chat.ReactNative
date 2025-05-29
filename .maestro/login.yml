@@ -7,5 +7,27 @@ name: "Login Test"
 - launchApp:
     label: "Launch app"
     clearState: true
-
+- extendedWaitUntil:
+    visible:
+      id: login-view
+- tapOn:
+    id: new-server-view-input
+- inputText:
+    text: https://mobile.rocket.chat
+- tapOn: Connect
+- tapOn: Login
+- tapOn:
+    id: login-view-email
+- inputText:
+    text: rohit.bansal@gmail.com
+- tapOn:
+    id: login-view-password
+- inputText:
+    text: rohit.bansal@gmail.com
+- tapOn:
+    id: login-view
+- tapOn:
+    text: Login
+    index: 1
+- assertVisible: general
 - stopRecording
