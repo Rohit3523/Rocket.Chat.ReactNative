@@ -33,31 +33,27 @@ jobs:
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Install Dependencies
-        run: yarn install
-
       - name: Decode Keystore
         run: |
-          mkdir -p android/keystore
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android/keystore/release.keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
 
       - name: Set gradle.properties
         run: |
           echo " " >> android/gradle.properties
-          echo "KEYSTORE=android/keystore/release.keystore" >> android/gradle.properties
+          echo "KEYSTORE=release.keystore" >> android/gradle.properties
           echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> android/gradle.properties
 
       - name: Cat gradle.properties
         run: cat android/gradle.properties
-
-      - name: Check if keystore exists
+      
+      - name: Give file tree
         run: |
-          if [ ! -f android/keystore/release.keystore ]; then
-            echo "Keystore not found"
-            exit 1
-          fi
+          ls -la
+
+      - name: Install Dependencies
+        run: yarn install
 
       - name: Enable KVM group permissions
         run: |
