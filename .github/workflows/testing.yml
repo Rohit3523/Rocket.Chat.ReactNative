@@ -12,7 +12,11 @@ jobs:
     steps:
       - name: Download APK
         run: |
-          curl -L https://dash.cloudflare.com/api/v4/accounts/2fb4f469c867b3eaea74fac96f2fb7c6/r2/buckets/app/objects/app-experimental-release.apk -o app-experimental-release.apk
+          curl -L https://pub-c6a557891e1a4fcdbcd530afab927625.r2.dev/app-experimental-release.apk -o app-experimental-release.apk
+      
+      - name: Check file type
+        run: |
+          file app-experimental-release.apk
 
       - uses: dniHze/maestro-test-action@v1
         with:
