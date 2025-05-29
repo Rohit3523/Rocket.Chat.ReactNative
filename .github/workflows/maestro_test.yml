@@ -80,8 +80,7 @@ jobs:
         run: |
           cd android
           ./gradlew assembleExperimentalRelease --no-daemon --build-cache --parallel --max-workers=4
-          mv app/build/outputs/apk/experimental/release/app-experimental-release.apk
-
+          
       - name: Free Space Before Cleanup
         run: |
           echo "Free space before cleanup:"
