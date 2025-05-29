@@ -28,7 +28,6 @@ name: "Login Test"
 - tapOn:
     id: login-view
 - tapOn:
-    text: Login
-    index: 1
+    id: login-view-submit
 - assertVisible: general
 - stopRecording
