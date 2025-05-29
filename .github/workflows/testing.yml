@@ -13,7 +13,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Download APK
+      - name: Download APK 
         run: |
           curl -L https://pub-c6a557891e1a4fcdbcd530afab927625.r2.dev/app-experimental-debug.apk -o app-experimental-debug.apk
       
