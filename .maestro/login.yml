@@ -7,7 +7,7 @@ name: "Login Test"
 - launchApp:
     label: "Launch app"
     clearState: true
-    permission: 
+    permissions:
       all: allow
 - extendedWaitUntil:
     visible: "Add Workspace"
