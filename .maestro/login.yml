@@ -11,6 +11,29 @@ name: "Login Test"
       all: allow
 - extendedWaitUntil:
     visible: "Add Workspace"
+    timeout: 20000
+- tapOn:
+    id: new-server-view-input
+- inputText:
+    text: https://mobile.rocket.chat
+- tapOn: Connect
+- tapOn: Login
+- tapOn:
+    id: login-view-email
+- inputText:
+    text: rohit.bansal@gmail.com
+- pressKey: Enter
+- inputText:
+    text: rohit.bansal@gmail.com
+- tapOn:
+    id: login-view
+- extendedWaitUntil:
+    visible: 
+      id: "Login"
+      index: 1
     timeout: 10000
     optional: true
+- tapOn:
+    id: login-view-submit
+- assertVisible: general
 - stopRecording
