@@ -43,9 +43,15 @@ jobs:
           script: |
             mkdir recording
             adb install app-experimental-debug.apk
+            adb shell screenrecord /sdcard/demo.mp4 &
+            RECORD_PID=$!
             adb shell am start -n chat.rocket.reactnative/.MainActivity
+            sleep 10
+            kill $RECORD_PID
+            sleep 2
+            adb pull /sdcard/demo.mp4 recording/demo.mp4
+            adb shell rm /sdcard/demo.mp4
             maestro hierarchy
-            maestro test .maestro
 
       - name: Upload Recordings
         uses: actions/upload-artifact@v4
