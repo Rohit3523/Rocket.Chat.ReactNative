@@ -9,4 +9,7 @@ name: "Login Test"
     clearState: true
     permissions:
       all: allow
+- extendedWaitUntil:
+    visible: "Add Workspace"
+    timeout: 10000
 - stopRecording
