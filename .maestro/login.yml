@@ -7,5 +7,5 @@ name: "Login Test"
 - launchApp:
     label: "Launch app"
     clearState: true
-  
+
 - stopRecording

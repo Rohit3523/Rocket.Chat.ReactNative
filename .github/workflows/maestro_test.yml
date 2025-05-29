@@ -101,11 +101,11 @@ jobs:
       - name: Start Android Emulator and Run Maestro Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 34
           arch: x86_64
           ram-size: 2048M
           disk-size: 4096M
-          target: default
+          target: playstore
           script: |
             mkdir -p recording
             adb install android/app/build/outputs/apk/experimental/release/app-experimental-release.apk
