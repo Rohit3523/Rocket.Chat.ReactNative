@@ -41,8 +41,9 @@ jobs:
           ram-size: 4096M
           disk-size: 4096M
           target: google_apis
-          profile: Pixel 7
+          profile: Nexus 6
           script: |
+            avdmanager list device
             mkdir recording
             adb install app-experimental-debug.apk
             maestro test .maestro/login.yml --format junit --output maestro-report.xml
