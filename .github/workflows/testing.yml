@@ -40,6 +40,7 @@ jobs:
           arch: x86_64
           ram-size: 4096M
           disk-size: 4096M
+          profile: Nexus 6
           script: |
             mkdir recording
             adb install app-experimental-debug.apk
