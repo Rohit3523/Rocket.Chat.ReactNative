@@ -1,0 +1,33 @@
+name: Maestro Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  android-maestro-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download APK
+        run: |
+          curl -L https://dash.cloudflare.com/api/v4/accounts/2fb4f469c867b3eaea74fac96f2fb7c6/r2/buckets/app/objects/app-experimental-release.apk -o app-experimental-release.apk
+
+      - uses: dniHze/maestro-test-action@v1
+        with:
+          screenshot-dir: screenshots
+          report: maestro/report.xml
+          version: 1.17.0
+
+      - name: Start Android Emulator and Run Maestro Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          ram-size: 4096M
+          disk-size: 4096M
+          target: playstore
+          script: |
+            adb install app-experimental-release.apk
+            maestro run .maestro/login.yml
