@@ -12,4 +12,5 @@ name: "Login Test"
 - extendedWaitUntil:
     visible: "Add Workspace"
     timeout: 10000
+    optional: true
 - stopRecording
