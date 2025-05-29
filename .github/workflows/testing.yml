@@ -43,6 +43,8 @@ jobs:
           script: |
             mkdir recording
             adb install app-experimental-debug.apk
+            adb shell am start -n chat.rocket.reactnative/.MainActivity
+            maestro hierarchy
             maestro test .maestro
 
       - name: Upload Recordings
