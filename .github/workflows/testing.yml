@@ -42,7 +42,7 @@ jobs:
           disk-size: 4096M
           script: |
             mkdir recording
-            adb install app-experimental-ddebug.apk
+            adb install app-experimental-debug.apk
             maestro test .maestro
 
       - name: Upload Recordings
