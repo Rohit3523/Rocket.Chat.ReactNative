@@ -43,7 +43,7 @@ jobs:
 
       - name: Set gradle.properties
         run: |
-          echo "hermesEnabled=true" > android/gradle.properties
+          echo " " >> android/gradle.properties
           echo "KEYSTORE=android/keystore/release.keystore" >> android/gradle.properties
           echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> android/gradle.properties
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> android/gradle.properties
