@@ -40,6 +40,7 @@ jobs:
           arch: x86_64
           ram-size: 4096M
           disk-size: 4096M
+          target: google_apis
           profile: Nexus 6
           script: |
             mkdir recording
