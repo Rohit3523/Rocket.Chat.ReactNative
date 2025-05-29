@@ -7,6 +7,8 @@ name: "Login Fail"
 - launchApp:
     label: "Launch app"
     clearState: true
+    permissions:
+      all: allow
 - tapOn:
     id: new-server-view-input
 - inputText:
