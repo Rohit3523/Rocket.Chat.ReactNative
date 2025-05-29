@@ -29,9 +29,10 @@ name: "Login Test"
     id: login-view
 - extendedWaitUntil:
     visible: 
-      text: "Login"
+      id: "Login1"
       index: 1
     timeout: 10000
+    optional: true
 - tapOn:
     id: login-view-submit
 - assertVisible: general

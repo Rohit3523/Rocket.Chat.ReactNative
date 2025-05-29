@@ -41,7 +41,7 @@ jobs:
           ram-size: 4096M
           disk-size: 4096M
           target: google_apis
-          profile: Nexus 6
+          profile: Pixel 7
           script: |
             mkdir recording
             adb install app-experimental-debug.apk
