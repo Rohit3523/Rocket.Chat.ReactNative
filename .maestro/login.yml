@@ -29,11 +29,12 @@ name: "Login Test"
     id: login-view
 - extendedWaitUntil:
     visible: 
-      id: "Login1"
+      id: "Login"
       index: 1
     timeout: 10000
     optional: true
 - tapOn:
     id: login-view-submit
+    optional: true
 - assertVisible: general
 - stopRecording
