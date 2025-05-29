@@ -80,7 +80,7 @@ jobs:
         run: |
           cd android
           ./gradlew assembleExperimentalRelease --no-daemon --build-cache --parallel --max-workers=4
-          mv app/build/outputs/apk/experimental/release/app-experimental-release.apk app/app-experimental-release.apk
+          mv app/build/outputs/apk/experimental/release/app-experimental-release.apk
 
       - name: Free Space Before Cleanup
         run: |
@@ -109,7 +109,7 @@ jobs:
           target: default
           script: |
             mkdir -p recording
-            adb install app/app-experimental-release.apk
+            adb install android/app/build/outputs/apk/experimental/release/app-experimental-release.apk
             maestro test .maestro --format junit --output maestro-report.xml
 
       - name: Generate HTML from JUnit XML
