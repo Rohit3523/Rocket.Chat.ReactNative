@@ -9,8 +9,4 @@ name: "Login Test"
     clearState: true
     permissions:
       all: allow
-- extendedWaitUntil:
-    visible:
-      id: login-view
-      timeout: 10000
 - stopRecording
