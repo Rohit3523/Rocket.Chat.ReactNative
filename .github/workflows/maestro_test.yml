@@ -31,7 +31,7 @@ jobs:
       - name: Install Maestro
         run: |
           curl -fsSL "https://get.maestro.mobile.dev" | bash
-          export PATH="$PATH":"$HOME/.maestro/bin"
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Install Dependencies
         run: yarn install
@@ -69,3 +69,69 @@ jobs:
           ./gradlew assembleExperimentalDebug --no-daemon --build-cache --parallel --max-workers=4
           mv app/build/outputs/apk/experimental/debug/app-experimental-debug.apk app/app-experimental-debug.apk
           ./gradlew clean
+
+      - name: Start Android Emulator and Run Maestro Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          ram-size: 2048M
+          disk-size: 4096M
+          target: default
+          script: |
+            mkdir -p recording
+            adb install android/app/app-experimental-debug.apk
+            maestro test .maestro --format junit --output maestro-report.xml
+
+      - name: Generate HTML from JUnit XML
+        run: |
+          npm install -g junit-viewer
+          junit-viewer --results=maestro-report.xml --save=report.html
+      
+      - name: Move Failed Test Recordings Only
+        run: |
+          mkdir -p failed_recordings
+          while read -r line; do
+            TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
+            FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
+            FILE_PATH="recording/${FILE_ID}.mp4"
+            if [ -f "$FILE_PATH" ]; then
+              mv "$FILE_PATH" "failed_recordings/${FILE_ID}.mp4"
+            fi
+          done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
+
+      - name: Upload Failed Test Recordings
+        uses: actions/upload-artifact@v4
+        with:
+          name: Failed Test Recordings
+          path: failed_recordings/
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Android Test Report
+          path: report.html
+
+      - name: Comment Failed Test Videos on PR
+        if: github.event_name == 'pull_request'
+        run: |
+          MESSAGE="### ❌ Failed Maestro Tests with Recordings\n"
+          HAS_FAILURES=0
+
+          while read -r line; do
+            TEST_ID=$(echo "$line" | sed -n 's/.*id="\([^"]*\)".*/\1/p')
+            FILE_ID=$(echo "$TEST_ID" | tr '[:upper:]' '[:lower:]' | sed 's/ /_/g')
+            FILE_PATH="recording/${FILE_ID}.mp4"
+            ARTIFACT_LINK="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+            if [ -f "$FILE_PATH" ]; then
+              HAS_FAILURES=1
+              MESSAGE+="🔴 **$TEST_ID** - [🎥 Recording]($ARTIFACT_LINK)\n"
+            fi
+          done < <(xmllint --xpath '//testcase[@status="ERROR"]' maestro-report.xml 2>/dev/null || true)
+
+          if [ "$HAS_FAILURES" -eq 1 ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "$MESSAGE"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
