@@ -39,4 +39,8 @@ jobs:
           disk-size: 4096M
           script: |
             adb install app-experimental-release.apk
-            maestro test .maestro/login.yml
+            ls -la
+            cd .maestro
+            ls -la
+            cd ..
+            maestro test .maestro
