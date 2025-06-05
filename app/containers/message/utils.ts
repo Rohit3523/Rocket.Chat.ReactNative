@@ -10,9 +10,10 @@ export const formatMessageCount = (count?: number, type?: string): string | null
 	const discussion = type === DISCUSSION;
 	let text = discussion ? I18n.t('No_messages_yet') : null;
 	if (!count) {
-		return text;
+		return text
 	}
 	if (count === 1) {
+        
 		text = `${count} ${discussion ? I18n.t('message') : I18n.t('reply')}`;
 	} else if (count > 1 && count < 1000) {
 		text = `${count} ${discussion ? I18n.t('messages') : I18n.t('replies')}`;
