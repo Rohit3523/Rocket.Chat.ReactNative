@@ -16,10 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 22
+          node-version: 20
 
-      - name: Install dependencies
-        run: yarn install
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Install CocoaPods
         run: |
@@ -29,6 +32,8 @@ jobs:
 
       - name: Build iOS app for Simulator
         run: |
+          export NODE_BINARY=$(which node)
+          export RCT_NO_LAUNCH_PACKAGER=true
           xcodebuild -workspace ios/RocketChatRN.xcworkspace \
             -scheme RocketChatRN \
             -configuration Debug \
