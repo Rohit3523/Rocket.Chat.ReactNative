@@ -39,6 +39,7 @@ jobs:
 
       - name: Build iOS app
         run: |
+          cd ios
           bundle exec fastlane ios build_experimental
 
       - name: Boot Simulator
