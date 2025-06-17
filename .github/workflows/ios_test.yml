@@ -29,9 +29,6 @@ jobs:
         with:
           ruby-version: 2.7.7
           bundler-cache: true
-    
-      - name: Install Fastlane
-        run: sudo gem install fastlane
 
       - name: pod install
         run: |
