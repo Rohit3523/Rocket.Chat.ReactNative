@@ -7,14 +7,14 @@ on:
 
 jobs:
   ios-simulator:
-    runs-on: macos-13
+    runs-on: macos-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
@@ -32,9 +32,7 @@ jobs:
 
       - name: Install CocoaPods
         run: |
-          sudo gem install cocoapods
-          cd ios
-          pod install
+          yarn pod-install
 
       - name: Build iOS app
         run: |
