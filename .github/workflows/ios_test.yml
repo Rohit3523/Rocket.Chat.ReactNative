@@ -1,0 +1,66 @@
+name: iOS Test
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  ios-simulator:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Install JavaScript dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.7
+          bundler-cache: true
+
+      - name: pod install
+        run: |
+          yarn pod-install
+
+      - name: Build iOS app
+        run: |
+          cd ios
+          bundle exec fastlane ios build_experimental
+
+      - name: Boot Simulator
+        run: |
+          xcrun simctl shutdown all
+          xcrun simctl boot "iPhone 15"
+          sleep 10
+
+      - name: Install app to Simulator
+        run: |
+          xcrun simctl install booted ios/build/Build/Products/Debug-iphonesimulator/RocketChatRN.app
+
+      - name: Launch app in Simulator
+        run: |
+          xcrun simctl launch booted chat.rocket.reactnative
+          sleep 5
+
+      - name: Take screenshot
+        run: |
+          mkdir -p screenshots
+          xcrun simctl io booted screenshot screenshots/screen1.png
+
+      - name: Upload screenshot as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iOS-simulator-screenshot
+          path: screenshots/screen1.png
