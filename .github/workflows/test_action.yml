@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - '*'
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,7 +23,7 @@ jobs:
           echo "Done."
 
   ios-hold-build-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
@@ -34,7 +33,7 @@ jobs:
         run: echo "Approved manually"
 
   ios-build-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: ios-hold-build-official
     runs-on: ubuntu-latest
     steps:
@@ -42,7 +41,7 @@ jobs:
         run: sleep 5
 
   ios-hold-testflight-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: ios-build-official
     runs-on: ubuntu-latest
     environment:
@@ -52,7 +51,7 @@ jobs:
         run: echo "Approved manually"
 
   ios-testflight-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: ios-hold-testflight-official
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +59,7 @@ jobs:
         run: sleep 5
 
   ios-hold-build-experimental:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
@@ -70,7 +69,7 @@ jobs:
         run: echo "Approved manually"
 
   ios-build-experimental:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: ios-hold-build-experimental
     runs-on: ubuntu-latest
     steps:
@@ -78,7 +77,7 @@ jobs:
         run: sleep 5
 
   ios-testflight-experimental:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: ios-build-experimental
     runs-on: ubuntu-latest
     steps:
@@ -87,7 +86,7 @@ jobs:
 
 
   android-hold-build-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
@@ -97,7 +96,7 @@ jobs:
         run: echo "Approved manually"
 
   android-build-official:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: android-hold-build-official
     runs-on: ubuntu-latest
     steps:
@@ -105,7 +104,7 @@ jobs:
         run: sleep 5
 
   android-hold-build-experimental:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
@@ -115,7 +114,7 @@ jobs:
         run: echo "Approved manually" 
 
   android-build-experimental:
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'pull_request'
     needs: android-hold-build-experimental
     runs-on: ubuntu-latest
     steps:
