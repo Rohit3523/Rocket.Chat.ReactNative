@@ -28,7 +28,7 @@ jobs:
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
-      name: ios-official-build-approval
+      name: ios_official_build_approval
     steps:
       - name: Hold for iOS Official Build
         run: echo "Approved manually"
@@ -46,7 +46,7 @@ jobs:
     needs: ios-build-official
     runs-on: ubuntu-latest
     environment:
-      name: ios-official-testflight-approval
+      name: ios_official_testflight_approval
     steps:
       - name: Hold for iOS Official TestFlight
         run: echo "Approved manually"
@@ -64,7 +64,7 @@ jobs:
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
-      name: ios-experimental-build-approval
+      name: ios_experimental_build_approval
     steps:
       - name: Hold for iOS Experimental Build
         run: echo "Approved manually"
@@ -91,7 +91,7 @@ jobs:
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
-      name: android-official-build-approval
+      name: android_official_build_approval
     steps:
       - name: Hold for Android Official Build
         run: echo "Approved manually"
@@ -109,7 +109,7 @@ jobs:
     needs: lint-testunit
     runs-on: ubuntu-latest
     environment:
-      name: android-experimental-build-approval
+      name: android_experimental_build_approval
     steps:
       - name: Hold for Android Experimental Build
         run: echo "Approved manually"
