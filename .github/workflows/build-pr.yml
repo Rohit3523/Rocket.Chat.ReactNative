@@ -27,6 +27,9 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
 
+      - name:  log version code
+        run: echo ${{ steps.version.outputs.VERSIONCODE }}
+
   run-eslint-and-test:
     name: ESLint and Test
     if: ${{ github.repository == 'RocketChat/Rocket.Chat.ReactNative' }}
