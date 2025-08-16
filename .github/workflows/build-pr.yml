@@ -19,6 +19,9 @@ jobs:
     name: Generate Version Code
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Generate Version Code
         id: version
         uses: ./.github/actions/generate-version-code
