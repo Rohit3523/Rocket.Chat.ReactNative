@@ -43,7 +43,7 @@ jobs:
         id: version
         uses: ./.github/actions/generate-version-code
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
 
       - name: Build Android
         uses: ./.github/actions/build-android
