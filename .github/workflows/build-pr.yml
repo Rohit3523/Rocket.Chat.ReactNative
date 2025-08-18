@@ -106,7 +106,7 @@ jobs:
         id: version
         uses: ./.github/actions/generate-version-code
         with:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
     
       - name:  log version code
         run: echo ${{ steps.version.outputs.VERSIONCODE }}
@@ -122,7 +122,7 @@ jobs:
         id: version
         uses: ./.github/actions/generate-version-code
         with:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}
     
       - name:  log version code
         run: echo ${{ steps.version.outputs.VERSIONCODE }}
