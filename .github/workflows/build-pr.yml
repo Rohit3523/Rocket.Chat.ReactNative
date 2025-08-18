@@ -94,3 +94,13 @@ jobs:
     uses: ./.github/workflows/maestro-ios.yml
     needs: [e2e-build-ios]
     secrets: inherit
+
+  version-code-first:
+    name: Generate Version Code
+    uses: ./.github/actions/generate-version-code/action.yml
+    secrets: inherit
+
+  version-code-second:
+    name: Generate Version Code
+    uses: ./.github/actions/generate-version-code/action.yml
+    secrets: inherit
