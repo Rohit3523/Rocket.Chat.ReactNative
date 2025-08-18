@@ -95,12 +95,34 @@ jobs:
     needs: [e2e-build-ios]
     secrets: inherit
 
-  version-code-first:
+  generate-version-code:
     name: Generate Version Code
-    uses: ./.github/actions/generate-version-code/action.yml
-    secrets: inherit
-
-  version-code-second:
-    name: Generate Version Code
-    uses: ./.github/actions/generate-version-code/action.yml
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+    
+      - name: Generate Version Code
+        id: version
+        uses: ./.github/actions/generate-version-code
+        with:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    
+      - name:  log version code
+        run: echo ${{ steps.version.outputs.VERSIONCODE }}
+    
+  generate-version-code-second:
+    name: Generate Version Code Second
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+    
+      - name: Generate Version Code
+        id: version
+        uses: ./.github/actions/generate-version-code
+        with:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+    
+      - name:  log version code
+        run: echo ${{ steps.version.outputs.VERSIONCODE }}
