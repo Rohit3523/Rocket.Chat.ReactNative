@@ -1,0 +1,122 @@
+name: Test Action
+
+on:
+  pull_request:
+    branches:
+      - '*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-testunit:
+    runs-on: ubuntu-latest
+    name: Lint + Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint + Test
+        run: |
+          echo "Running Lint + Test..."
+          sleep 5
+          echo "Done."
+
+  ios-hold-build-official:
+    if: github.event_name == 'pull_request'
+    needs: lint-testunit
+    runs-on: ubuntu-latest
+    environment:
+      name: ios_official_build_approval
+    steps:
+      - name: Hold for iOS Official Build
+        run: echo "Approved manually"
+
+  ios-build-official:
+    if: github.event_name == 'pull_request'
+    needs: ios-hold-build-official
+    runs-on: ubuntu-latest
+    steps:
+      - name: iOS Official Build
+        run: sleep 5
+
+  ios-hold-testflight-official:
+    if: github.event_name == 'pull_request'
+    needs: ios-build-official
+    runs-on: ubuntu-latest
+    environment:
+      name: ios_official_testflight_approval
+    steps:
+      - name: Hold for iOS Official TestFlight
+        run: echo "Approved manually"
+
+  ios-testflight-official:
+    if: github.event_name == 'pull_request'
+    needs: ios-hold-testflight-official
+    runs-on: ubuntu-latest
+    steps:
+      - name: iOS Official TestFlight Release
+        run: sleep 5
+
+  ios-hold-build-experimental:
+    if: github.event_name == 'pull_request'
+    needs: lint-testunit
+    runs-on: ubuntu-latest
+    environment:
+      name: ios_experimental_build_approval
+    steps:
+      - name: Hold for iOS Experimental Build
+        run: echo "Approved manually"
+
+  ios-build-experimental:
+    if: github.event_name == 'pull_request'
+    needs: ios-hold-build-experimental
+    runs-on: ubuntu-latest
+    steps:
+      - name: iOS Experimental Build
+        run: sleep 5
+
+  ios-testflight-experimental:
+    if: github.event_name == 'pull_request'
+    needs: ios-build-experimental
+    runs-on: ubuntu-latest
+    steps:
+      - name: iOS Experimental TestFlight Release
+        run: sleep 5
+
+
+  android-hold-build-official:
+    if: github.event_name == 'pull_request'
+    needs: lint-testunit
+    runs-on: ubuntu-latest
+    environment:
+      name: android_official_build_approval
+    steps:
+      - name: Hold for Android Official Build
+        run: echo "Approved manually"
+
+  android-build-official:
+    if: github.event_name == 'pull_request'
+    needs: android-hold-build-official
+    runs-on: ubuntu-latest
+    steps:
+      - name: Android Official Build
+        run: sleep 5
+
+  android-hold-build-experimental:
+    if: github.event_name == 'pull_request'
+    needs: lint-testunit
+    runs-on: ubuntu-latest
+    environment:
+      name: android_experimental_build_approval
+    steps:
+      - name: Hold for Android Experimental Build
+        run: echo "Approved manually" 
+
+  android-build-experimental:
+    if: github.event_name == 'pull_request'
+    needs: android-hold-build-experimental
+    runs-on: ubuntu-latest
+    steps:
+      - name: Android Experimental Build
+        run: sleep 5
